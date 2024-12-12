@@ -103,11 +103,24 @@ const errorHandlers = {
     if (!newToken) {
       const lang = window.location.pathname.split('/')[1]
 
+      // Si no se puede renovar el token, redirigir al login
       Swal.fire({
         title: 'Sesión Expirada',
-        text: 'Tu sesión ha expirado, por favor inicia sesión nuevamente.',
+        text: 'Tu sesión ha expirado, serás redirigido al Login.',
         icon: 'warning',
-        confirmButtonText: 'Iniciar sesión'
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          const timerProgressBar = Swal.getPopup().querySelector('.swal2-timer-progress-bar')
+
+          if (timerProgressBar) {
+            timerProgressBar.style.height = '8px'
+            timerProgressBar.style.borderRadius = '4px'
+            timerProgressBar.style.backgroundColor = '#FF5733'
+          }
+        }
       }).then(() => {
         window.location.href = `/${lang}/login`
       })
