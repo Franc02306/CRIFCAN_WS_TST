@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
+import { useSession } from 'next-auth/react'
 
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
@@ -39,7 +40,7 @@ const UserProfile = ({ tabContentList, data }) => {
                 }
                 value='profile'
               />
-              <Tab
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-users text-lg' />
@@ -47,8 +48,8 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='teams'
-              />
-              <Tab
+              /> */}
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-layout-grid text-lg' />
@@ -56,8 +57,8 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='projects'
-              />
-              <Tab
+              /> */}
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-link text-lg' />
@@ -65,7 +66,7 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='connections'
-              />
+              /> */}
             </CustomTabList>
 
             <TabPanel value={activeTab} className='p-0'>

@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -12,32 +12,95 @@ import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import { Snackbar, Alert } from '@mui/material'
+
+import { useSession } from 'next-auth/react'
+
+import ChangePasswordModal from '../security/ChangePasswordModal'
+
+import { login } from '@/service/authService'
 
 //Component Imports
 import CustomTextField from '@core/components/mui/TextField'
 
 const ChangePasswordCard = () => {
-  // States
+  const { data: session, status } = useSession()
+  const [userData, setUserData] = useState(null)
   const [isCurrentPasswordShown, setIsCurrentPasswordShown] = useState(false)
-  const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false)
-  const [isNewPasswordShown, setIsNewPasswordShown] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isPasswordChangeEnabled, setIsPasswordChangeEnabled] = useState(false);
+  const [message, setMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('error');
+  const [isValidateButtonDisabled, setIsValidateButtonDisabled] = useState(false);
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (session) {
+      setUserData(session.user)
+    }
+  }, [session])
+
+  const handleOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   const handleClickShowCurrentPassword = () => {
     setIsCurrentPasswordShown(!isCurrentPasswordShown)
   }
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  }
+
+  const handleValidatePassword = async (e) => {
+    e.preventDefault();
+
+    if (!session?.user?.email) {
+      setMessage('No se puede obtener el email del usuario');
+      setOpenSnackbar(true);
+
+      return;
+    }
+
+    try {
+      await login({
+        email: session.user.email,
+        password: currentPassword
+      });
+
+      setMessage('Contraseña actual válida. Puedes cambiar la contraseña.');
+      setSnackbarSeverity('success')
+      setIsPasswordChangeEnabled(true);
+      setIsValidateButtonDisabled(true);
+    } catch (error) {
+      setMessage('Contraseña actual incorrecta.');
+      setSnackbarSeverity('error');
+      setIsPasswordChangeEnabled(false);
+    } finally {
+      setOpenSnackbar(true);
+    }
+  };
+
   return (
     <Card>
-      <CardHeader title='Change Password' />
+      <CardHeader title='Actualización de Contraseña' />
       <CardContent>
-        <form>
+        <form onSubmit={handleValidatePassword} >
           <Grid container spacing={6}>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Current Password'
+                label='Contraseña Actual'
                 type={isCurrentPasswordShown ? 'text' : 'password'}
-                placeholder='············'
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -55,74 +118,40 @@ const ChangePasswordCard = () => {
             </Grid>
           </Grid>
           <Grid container className='mbs-0' spacing={6}>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='New Password'
-                type={isNewPasswordShown ? 'text' : 'password'}
-                placeholder='············'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={() => setIsNewPasswordShown(!isNewPasswordShown)}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isNewPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Confirm New Password'
-                type={isConfirmPasswordShown ? 'text' : 'password'}
-                placeholder='············'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={() => setIsConfirmPasswordShown(!isConfirmPasswordShown)}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isConfirmPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} className='flex flex-col gap-4'>
-              <Typography variant='h6'>Password Requirements:</Typography>
-              <div className='flex flex-col gap-4'>
-                <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  Minimum 8 characters long - the more, the better
-                </div>
-                <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  At least one lowercase & one uppercase character
-                </div>
-                <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  At least one number, symbol, or whitespace character
-                </div>
-              </div>
-            </Grid>
             <Grid item xs={12} className='flex gap-4'>
-              <Button variant='contained'>Save Changes</Button>
-              <Button variant='tonal' type='reset' color='secondary'>
-                Reset
+              <Button
+                variant='contained'
+                type='submit'
+                disabled={isValidateButtonDisabled}
+              >
+                Validar
               </Button>
+
+              {isPasswordChangeEnabled && (
+                <Button
+                  variant="contained"
+                  onClick={handleOpen}
+                  style={{ marginLeft: '8px' }}
+                >
+                  Cambiar Contraseña
+                </Button>
+              )}
             </Grid>
           </Grid>
         </form>
       </CardContent>
+
+      <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {message}
+        </Alert>
+      </Snackbar>
+
+      <ChangePasswordModal
+        open={open}
+        handleClose={handleClose}
+        userId={userData?.id}
+      />
     </Card>
   )
 }

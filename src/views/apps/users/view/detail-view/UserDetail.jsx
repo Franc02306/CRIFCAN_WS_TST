@@ -3,32 +3,36 @@ import { useEffect, useState, useCallback } from 'react'
 
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Button, Card, CardContent, Chip, Divider, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, Chip, CircularProgress, Divider, Typography } from '@mui/material'
 
 import Swal from 'sweetalert2'
 
 import { useTheme } from '@emotion/react'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
-import UserModal from '../../create/UserModal'
 import { getUserById, deleteUser, updateUserById } from '../../../../../service/userService'
 
 
 export function UserDetail({ id, user }) {
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [userData, setUserData] = useState(user)
   const theme = useTheme()
 
   const updateUser = useCallback(async () => {
     if (id) {
-      setLoading(true)
+      setIsLoading(true)
       const response = await getUserById(id)
+
+      console.log("respuesta completa de user: ", response)
 
       setUserData(response.data)
 
-      setLoading(false)
+      // Agrega el console.log para ver lo que trae userData
+      console.log("Datos del usuario:", response.data)
+
+      setIsLoading(false)
     }
   }, [id])
 
@@ -88,18 +92,20 @@ export function UserDetail({ id, user }) {
     }
   }, [id, updateUser])
 
-  if (loading || !userData) {
-    return <div>Cargando...</div>
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )
   }
-
-  const buttonProps = (children, color, variant) => ({
-    children,
-    color,
-    variant
-  })
-
-  // Filtra los cargos para eliminar duplicados por id
-  const uniqueCargos = userData?.system_role ? [userData.system_role] : [];
 
   return (
     <>
@@ -114,20 +120,13 @@ export function UserDetail({ id, user }) {
                     {userData?.username} {userData?.last_name}
                   </Typography>
                 </div>
-
-                {/* Mostrar los cargos únicos del usuario en forma de lista */}
-                <div className='flex flex-wrap gap-2'>
-                  {uniqueCargos?.map((system_role, index) => (
-                    <Chip key={index} label={system_role.description || 'Sin Rol de Sistema'} color='secondary' size='small' variant='tonal' />
-                  ))}
-                </div>
               </div>
             </div>
             <div>
               <Typography variant='h5' align='center'>Detalles de Usuario</Typography>
               <Divider className='mlb-4' />
               <div className='flex flex-col gap-2'>
-                <div className='flex items-center flex-wrap gap-x-1.5'>
+                {/* <div className='flex items-center flex-wrap gap-x-1.5'>
                   <Typography className='font-medium' color='text.primary'>
                     Tipo de Identificación:
                   </Typography>
@@ -138,41 +137,42 @@ export function UserDetail({ id, user }) {
                     Numero de Identificación:
                   </Typography>
                   <Typography>{userData?.number_identification || 'Sin Número de Identificación'}</Typography>
-                </div>
+                </div> */}
 
                 <div className='flex items-center flex-wrap gap-x-1.5'>
-                  <Typography className='font-medium' color='text.primary'>
-                    Email:
+                  <Typography className='font-medium' color='text.primary' sx={{ mt: 2 }}>
+                    Correo:
                   </Typography>
-                  <Typography>{userData?.email || 'Sin Email'}</Typography>
+                  <Typography sx={{ mt: 2 }}>{userData?.email || 'Sin Correo'}</Typography>
                 </div>
                 <div className='flex items-center flex-wrap gap-x-1.5'>
-                  <Typography className='font-medium' color='text.primary'>
+                  <Typography className='font-medium' color='text.primary' sx={{ mt: 2 }}>
                     Estado:
                   </Typography>
-                  <Typography>{userData?.is_active ? 'Activo' : 'Inactivo'}</Typography>
+                  <Typography sx={{ mt: 2 }}>{userData?.is_active ? 'Activo' : 'Inactivo'}</Typography>
+                </div>
+								<div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary' sx={{ mt: 2 }}>
+                    Rol de Sistema:
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>{userData?.system_role_description || 'Sin Rol de Sistema'}</Typography>
                 </div>
                 <div className='flex items-center flex-wrap gap-x-1.5'>
-                  <Typography className='font-medium' color='text.primary'>
+                  <Typography className='font-medium' color='text.primary' sx={{ mt: 2 }}>
                     Fecha de Creación:
                   </Typography>
-                  <Typography>
+                  <Typography sx={{ mt: 2 }}>
                     {userData?.date_joined
                       ? format(new Date(userData?.date_joined), 'dd/MM/yyyy', { locale: es })
                       : 'Fecha no disponible'}
                   </Typography>
-                </div>
-                <div className='flex items-center flex-wrap gap-x-1.5'>
-                  <Typography className='font-medium' color='text.primary'>
-                    Institución:
-                  </Typography>
-                  <Typography>{userData?.institution?.name || 'Sin Institución'}</Typography>
                 </div>
                 <div className='flex justify-center mt4'>
                   <Button
                     variant="contained"
                     color={userData?.is_active ? "error" : "success"}
                     onClick={handleToggleUserStatus}
+										sx={{ mt: 5 }}
                   >
                     {userData?.is_active ? 'Inactivar' : 'Activar'}
                   </Button>
@@ -182,8 +182,6 @@ export function UserDetail({ id, user }) {
           </CardContent>
         }
       </Card>
-
-      <UserModal open={addUserOpen} setOpen={setAddUserOpen} />
     </>
   )
 }

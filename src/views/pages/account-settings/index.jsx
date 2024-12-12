@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
@@ -14,10 +14,21 @@ import CustomTabList from '@core/components/mui/TabList'
 
 const AccountSettings = ({ tabContentList }) => {
   // States
-  const [activeTab, setActiveTab] = useState('account')
+  const [activeTab, setActiveTab] = useState('security') // Default to 'security'
 
+  // On load, check localStorage for saved tab or default to 'security'
+  useEffect(() => {
+    const savedTab = localStorage.getItem('activeTab')
+    
+    if (savedTab) {
+      setActiveTab(savedTab)
+    }
+  }, [])
+
+  // Save active tab to localStorage
   const handleChange = (event, value) => {
     setActiveTab(value)
+    localStorage.setItem('activeTab', value)
   }
 
   return (
@@ -25,7 +36,7 @@ const AccountSettings = ({ tabContentList }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-            <Tab
+            {/* <Tab
               label={
                 <div className='flex items-center gap-1.5'>
                   <i className='tabler-users text-lg' />
@@ -33,30 +44,12 @@ const AccountSettings = ({ tabContentList }) => {
                 </div>
               }
               value='account'
-            />
-            <Tab
-              label={
-                <div className='flex items-center gap-1.5'>
-                  <i className='tabler-lock text-lg' />
-                  Security
-                </div>
-              }
-              value='security'
-            />
-            <Tab
-              label={
-                <div className='flex items-center gap-1.5'>
-                  <i className='tabler-bookmark text-lg' />
-                  Billing & Plans
-                </div>
-              }
-              value='billing-plans'
-            />
+            /> */}
             <Tab
               label={
                 <div className='flex items-center gap-1.5'>
                   <i className='tabler-bell text-lg' />
-                  Notifications
+                  Notificaciones
                 </div>
               }
               value='notifications'
@@ -64,12 +57,30 @@ const AccountSettings = ({ tabContentList }) => {
             <Tab
               label={
                 <div className='flex items-center gap-1.5'>
+                  <i className='tabler-lock text-lg' />
+                  Seguridad
+                </div>
+              }
+              value='security'
+            />
+            {/* <Tab
+              label={
+                <div className='flex items-center gap-1.5'>
+                  <i className='tabler-bookmark text-lg' />
+                  Billing & Plans
+                </div>
+              }
+              value='billing-plans'
+            /> */}
+            {/* <Tab
+              label={
+                <div className='flex items-center gap-1.5'>
                   <i className='tabler-link text-lg' />
                   Connections
                 </div>
               }
               value='connections'
-            />
+            /> */}
           </CustomTabList>
         </Grid>
         <Grid item xs={12}>

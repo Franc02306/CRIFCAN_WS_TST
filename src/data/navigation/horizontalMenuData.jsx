@@ -12,24 +12,24 @@ const horizontalMenuData = (dictionary, params) => [
   {
     label: dictionary['navigation'].usuarios,
     icon: 'tabler-users',
-    href: `/en/apps/users/list`
+    href: `/en/apps/users/list`,
   },
   {
-    label: dictionary['navigation'].instituciones,
-    icon: 'tabler-scale',
-    href: `/en/apps/institutions/list`
+    label: dictionary['navigation'].scraping,
+    icon: 'tabler-settings',
+    href: `/en/apps/scraping/params-list`,
   },
 
   // MÓDULOS PARA USUARIOS NO ADMINISTRADORES
   {
-    label: dictionary['navigation'].grupoComite,
-    icon: 'tabler-users-group',
-    href: `/en/apps/committee-groups/list`
+    label: dictionary['navigation'].cangpt,
+    icon: 'tabler-robot',
+    href: `/en/apps/can-gpt/chat`,
   },
   {
-    label: dictionary['navigation'].documentos,
-    icon: 'tabler-file-text',
-    href: `/en/apps/documents/list`
+    label: dictionary['navigation'].dashboard,
+    icon: 'tabler-chart-bar',
+    href: `/en/apps/dashboard/report`
   }
   
   // {

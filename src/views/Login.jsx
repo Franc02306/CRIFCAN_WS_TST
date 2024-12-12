@@ -130,6 +130,8 @@ const Login = ({ mode }) => {
 
     if (res && res.ok && res.error === null) {
       const tokenFromStorage = localStorage.getItem('token');
+
+      console.log('Token almacenado en localStorage:', tokenFromStorage);
       const redirectURL = searchParams.get('redirectTo') ?? '/'
       
       router.push(getLocalizedUrl(redirectURL, locale))
@@ -168,8 +170,8 @@ const Login = ({ mode }) => {
         <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-8 sm:mbs-11 md:mbs-0'>
           <div className='flex flex-col gap-1'>
             {/* <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography> */}
-            <Typography variant='h4'>{`Bienvenido! 👋🏻`}</Typography>
-            <Typography>Iniciar Sesión</Typography>
+            <Typography align="center" variant='h4'>{`¡Bienvenido Usuario! 👋🏻`}</Typography>
+            <Typography align="center" variant='h5'>Iniciar Sesión</Typography>
           </div>
           {/* <Alert icon={false} className='bg-[var(--mui-palette-primary-lightOpacity)]'>
             <Typography variant='body2' color='primary'>

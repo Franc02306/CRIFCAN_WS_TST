@@ -3,10 +3,9 @@
         "home": "Inicio",
         "gestión": "Gestión",
         "usuarios": "Usuarios",
-        "instituciones": "Instituciones",
-        "documentos": "Documentos",
-        "grupoComite": "Grupos de Trabajo",
-        
+        "cangpt": "CAN GPT",
+        "dashboard": "Reportes",
+        "scraping": "Frecuencia de Scrapeo",
         "dashboards": "Dashboards",
         "crm": "CRM",
         "analytics": "Analytics",

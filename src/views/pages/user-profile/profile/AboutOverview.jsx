@@ -1,16 +1,16 @@
-// MUI Imports
 import Image from 'next/image'
 
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-
-import { Box, CardMedia, Divider } from '@mui/material'
+import CardMedia from '@mui/material/CardMedia'
+import { Box, Divider } from '@mui/material'
 
 const coverImg = '/images/pages/LogoSGCAN (horizontal).png'
 
 const AboutOverview = ({ data }) => {
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -41,31 +41,26 @@ const AboutOverview = ({ data }) => {
           <Divider />
           <CardContent className='flex flex-col gap-6'>
             <div className='flex flex-col gap-4'>
-              <Typography variant='body2' color='Active'>
-                Nombre Completo: {data?.username} {data?.last_name}
+              <Typography color='Active'>
+                Nombres completo: {data?.name} {data?.apellidos}
               </Typography>
             </div>
 
             <div className='flex flex-col gap-4'>
-              <Typography variant='body2' color='Active'>
-                Correo Electrónico: {data?.email}
-              </Typography>
-            </div>
-            <div className='flex flex-col gap-4'>
-              <Typography variant='body2' color='Active'>
-                Institución: {data?.institution?.name}
+              <Typography color='Active'>
+                Email: {data?.email}
               </Typography>
             </div>
 
             <div className='flex flex-col gap-4'>
-              <Typography variant='body2' color='Active'>
-                Rol de Sistema: {data?.system_role?.description}
+              <Typography color='Active'>
+                Estado: {data?.is_active ? 'Activo' : 'Desativado'}
               </Typography>
             </div>
 
             <div className='flex flex-col gap-4'>
-              <Typography variant='body2' color='Active'>
-                Estado: {data?.is_active ? 'Activo' : 'Desactivado'}
+              <Typography color='Active'>
+                Rol de Sistema: {data?.system_role_description}
               </Typography>
             </div>
           </CardContent>
