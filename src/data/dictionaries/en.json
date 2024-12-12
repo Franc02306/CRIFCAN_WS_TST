@@ -1,7 +1,8 @@
 {
     "navigation": {
         "home": "Inicio",
-        "gestión": "Gestión",
+        "gestion": "Gestión",
+        "modulos": "Modulos",
         "usuarios": "Usuarios",
         "cangpt": "CAN GPT",
         "dashboard": "Reportes",

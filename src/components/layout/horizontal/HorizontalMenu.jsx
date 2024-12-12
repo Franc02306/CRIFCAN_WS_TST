@@ -32,7 +32,6 @@ import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 // horizontalMenuData Imports
 import horizontalMenuData from '../../../data/navigation/horizontalMenuData'
 
-
 const RenderExpandIcon = ({ level }) => (
   <StyledHorizontalNavExpandIcon level={level}>
     <i className='tabler-chevron-right' />
@@ -54,7 +53,7 @@ const HorizontalMenu = ({ dictionary }) => {
   const { data: session, status } = useSession()
 
   // Menú dinámico basado en horizontalMenuData
-  const menuData = horizontalMenuData(dictionary, params, session);
+  const menuData = horizontalMenuData(dictionary, params, session)
 
   // Vars
   const { skin } = settings
@@ -62,29 +61,31 @@ const HorizontalMenu = ({ dictionary }) => {
   const { lang: locale, id } = params
 
   // Función recursiva para renderizar el menú
-  const renderMenuItems = (items) =>
-    items.map((item) => {
-      if (item.children) {
+  const renderMenuItems = items =>
+    items
+      .filter(item => (item.permission ? item.permission() : true)) // Filtra según permisos
+      .map(item => {
+        if (item.children) {
+          return (
+            <SubMenu key={item.label} label={item.label} icon={<i className={item.icon} />}>
+              {renderMenuItems(item.children)} {/* Renderiza los elementos hijos */}
+            </SubMenu>
+          )
+        }
+
         return (
-          <SubMenu key={item.label} label={item.label} icon={<i className={item.icon} />}>
-            {renderMenuItems(item.children)}
-          </SubMenu>
-        );
-      }
-      
-      return (
-        <MenuItem
-          key={item.label}
-          href={item.href}
-          icon={item.icon && <i className={item.icon} />}
-          target={item.target}
-          disabled={item.disabled}
-          suffix={item.suffix}
-        >
-          {item.label}
-        </MenuItem>
-      );
-    });
+          <MenuItem
+            key={item.label}
+            href={item.href}
+            icon={item.icon && <i className={item.icon} />}
+            target={item.target}
+            disabled={item.disabled}
+            suffix={item.suffix}
+          >
+            {item.label}
+          </MenuItem>
+        )
+      })
 
   return (
     <HorizontalNav
@@ -93,33 +94,31 @@ const HorizontalMenu = ({ dictionary }) => {
       verticalNavProps={{
         customStyles: verticalNavigationCustomStyles(verticalNavOptions, theme),
         backgroundColor:
-          settings.skin === 'bordered'
-            ? 'var(--mui-palette-background-paper)'
-            : 'var(--mui-palette-background-default)',
+          settings.skin === 'bordered' ? 'var(--mui-palette-background-paper)' : 'var(--mui-palette-background-default)'
       }}
     >
       <Menu
         rootStyles={menuRootStyles(theme)}
         renderExpandIcon={({ level }) => <RenderExpandIcon level={level} />}
         menuItemStyles={menuItemStyles(settings, theme)}
-        renderExpandedMenuItemIcon={{ icon: <i className="tabler-circle text-xs" /> }}
+        renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         popoutMenuOffset={{
           mainAxis: ({ level }) => (level && level > 0 ? 14 : 12),
-          alignmentAxis: 0,
+          alignmentAxis: 0
         }}
         verticalMenuProps={{
           menuItemStyles: verticalMenuItemStyles(verticalNavOptions, theme, settings),
           renderExpandIcon: ({ open }) => (
             <RenderVerticalExpandIcon open={open} transitionDuration={verticalNavOptions.transitionDuration} />
           ),
-          renderExpandedMenuItemIcon: { icon: <i className="tabler-circle text-xs" /> },
-          menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme),
+          renderExpandedMenuItemIcon: { icon: <i className='tabler-circle text-xs' /> },
+          menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        {renderMenuItems(menuData)}
+        {renderMenuItems(menuData)} {/* Renderiza los elementos del menú filtrados */}
       </Menu>
     </HorizontalNav>
-  );
-};
+  )
+}
 
-export default HorizontalMenu;
+export default HorizontalMenu

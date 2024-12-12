@@ -1,4 +1,4 @@
-const horizontalMenuData = (dictionary, params) => [
+const horizontalMenuData = (dictionary, params, session) => [
   // This is how you will normally render submenu
   // MENU PRINCIPAL
   {
@@ -10,28 +10,41 @@ const horizontalMenuData = (dictionary, params) => [
 
   // GESTIÓN SOLO PRA ADMINISTRADORES
   {
-    label: dictionary['navigation'].usuarios,
-    icon: 'tabler-users',
-    href: `/en/apps/users/list`,
-  },
-  {
-    label: dictionary['navigation'].scraping,
-    icon: 'tabler-settings',
-    href: `/en/apps/scraping/params-list`,
+    label: dictionary['navigation'].gestion,
+    isSection: true,
+    permission: () => session?.user?.system_role === 1,
+    children: [
+      {
+        label: dictionary['navigation'].usuarios,
+        icon: 'tabler-users',
+        href: `/en/apps/users/list`
+      },
+      {
+        label: dictionary['navigation'].scraping,
+        icon: 'tabler-settings',
+        href: `/en/apps/scraping/params-list`
+      }
+    ]
   },
 
   // MÓDULOS PARA USUARIOS NO ADMINISTRADORES
   {
-    label: dictionary['navigation'].cangpt,
-    icon: 'tabler-robot',
-    href: `/en/apps/can-gpt/chaat`,
-  },
-  {
-    label: dictionary['navigation'].dashboard,
-    icon: 'tabler-chart-bar',
-    href: `/en/apps/dashboard/report`
+    label: dictionary['navigation'].modulos,
+    isSection: true,
+    children: [
+      {
+        label: dictionary['navigation'].cangpt,
+        icon: 'tabler-robot',
+        href: `/en/apps/can-gpt/chat`
+      },
+      {
+        label: dictionary['navigation'].dashboard,
+        icon: 'tabler-chart-bar',
+        href: `/en/apps/dashboard/report`
+      }
+    ]
   }
-  
+
   // {
   //   label: dictionary['navigation'].dashboards,
   //   icon: 'tabler-smart-home',
