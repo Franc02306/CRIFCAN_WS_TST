@@ -1,7 +1,11 @@
 'use strict'
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true'
+})
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withBundleAnalyzer({
   basePath: process.env.BASEPATH,
   redirects: async () => {
     return [
@@ -14,8 +18,30 @@ const nextConfig = {
     ]
   },
 
-  // TODO: below line is added to resolve twice event dispatch in the calendar reducer
-  reactStrictMode: false
-}
+  reactStrictMode: false,
+
+  webpack: (config, { dev, isServer }) => {
+    if (!dev) {
+      config.cache = {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename]
+        }
+      }
+    }
+
+    if (!isServer) {
+      config.resolve.fallback = {
+        fs: false,
+        path: false,
+        os: false
+      }
+    }
+
+    return config
+  },
+
+  swcMinify: true
+})
 
 module.exports = nextConfig
