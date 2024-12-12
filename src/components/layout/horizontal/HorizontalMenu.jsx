@@ -8,12 +8,12 @@ import { useParams } from 'next/navigation'
 import { useTheme } from '@mui/material/styles'
 import { useSession } from 'next-auth/react'
 
-// Component Imports
+// Component Imports (Usando la importación centralizada desde @menu/horizontal)
 import HorizontalNav, { Menu, SubMenu, MenuItem } from '@menu/horizontal-menu'
+
 import VerticalNavContent from './VerticalNavContent'
 import CustomChip from '@core/components/mui/Chip'
 
-// import { GenerateHorizontalMenu } from '@components/GenerateMenu'
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 import { useSettings } from '@core/hooks/useSettings'
@@ -45,34 +45,26 @@ const RenderVerticalExpandIcon = ({ open, transitionDuration }) => (
 )
 
 const HorizontalMenu = ({ dictionary }) => {
-  // Hooks
   const verticalNavOptions = useVerticalNav()
   const theme = useTheme()
   const { settings } = useSettings()
   const params = useParams()
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
-  // Menú dinámico basado en horizontalMenuData
   const menuData = horizontalMenuData(dictionary, params, session)
 
-  // Vars
-  const { skin } = settings
-  const { transitionDuration } = verticalNavOptions
-  const { lang: locale, id } = params
-
-  // Función recursiva para renderizar el menú
-  const renderMenuItems = items =>
+  const renderMenuItems = (items) => 
     items
-      .filter(item => (item.permission ? item.permission() : true)) // Filtra según permisos
+      .filter(item => item.permission ? item.permission() : true)
       .map(item => {
         if (item.children) {
           return (
             <SubMenu key={item.label} label={item.label} icon={<i className={item.icon} />}>
-              {renderMenuItems(item.children)} {/* Renderiza los elementos hijos */}
+              {renderMenuItems(item.children)}
             </SubMenu>
           )
         }
-
+        
         return (
           <MenuItem
             key={item.label}
@@ -94,28 +86,30 @@ const HorizontalMenu = ({ dictionary }) => {
       verticalNavProps={{
         customStyles: verticalNavigationCustomStyles(verticalNavOptions, theme),
         backgroundColor:
-          settings.skin === 'bordered' ? 'var(--mui-palette-background-paper)' : 'var(--mui-palette-background-default)'
+          settings.skin === 'bordered'
+            ? 'var(--mui-palette-background-paper)'
+            : 'var(--mui-palette-background-default)',
       }}
     >
       <Menu
         rootStyles={menuRootStyles(theme)}
         renderExpandIcon={({ level }) => <RenderExpandIcon level={level} />}
         menuItemStyles={menuItemStyles(settings, theme)}
-        renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
+        renderExpandedMenuItemIcon={{ icon: <i className="tabler-circle text-xs" /> }}
         popoutMenuOffset={{
           mainAxis: ({ level }) => (level && level > 0 ? 14 : 12),
-          alignmentAxis: 0
+          alignmentAxis: 0,
         }}
         verticalMenuProps={{
           menuItemStyles: verticalMenuItemStyles(verticalNavOptions, theme, settings),
           renderExpandIcon: ({ open }) => (
             <RenderVerticalExpandIcon open={open} transitionDuration={verticalNavOptions.transitionDuration} />
           ),
-          renderExpandedMenuItemIcon: { icon: <i className='tabler-circle text-xs' /> },
-          menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
+          renderExpandedMenuItemIcon: { icon: <i className="tabler-circle text-xs" /> },
+          menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme),
         }}
       >
-        {renderMenuItems(menuData)} {/* Renderiza los elementos del menú filtrados */}
+        {renderMenuItems(menuData)}
       </Menu>
     </HorizontalNav>
   )

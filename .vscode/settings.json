@@ -49,5 +49,8 @@
     "iconify",
     "tanstack",
     "customizer"
-  ]
+  ],
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

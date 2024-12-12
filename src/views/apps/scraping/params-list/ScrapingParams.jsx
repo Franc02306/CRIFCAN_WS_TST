@@ -441,7 +441,17 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity='success' sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity='info'
+          sx={{
+            width: '100%',
+            backgroundColor: 'rgba(100, 200, 255, 0.8)',
+            color: '#000',
+            fontWeight: '600',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.9)'
+          }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
