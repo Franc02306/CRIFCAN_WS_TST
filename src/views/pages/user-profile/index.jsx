@@ -31,15 +31,15 @@ const UserProfile = ({ tabContentList, data }) => {
         <Grid item xs={12} className='flex flex-col gap-6'>
           <TabContext value={activeTab}>
             <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-              <Tab
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-user-check text-lg' />
-                    Profile
+                    Profilej
                   </div>
                 }
                 value='profile'
-              />
+              /> */}
               {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>

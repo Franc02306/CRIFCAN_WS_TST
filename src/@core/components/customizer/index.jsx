@@ -158,12 +158,12 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
           [styles.smallScreen]: isMobileScreen
         })}
       >
-        <div
+        {/* <div
           className={classnames('customizer-toggler flex items-center justify-center cursor-pointer', styles.toggler)}
           onClick={handleToggle}
         >
           <i className='tabler-settings text-[22px]' />
-        </div>
+        </div> */}
         <div className={classnames('customizer-header flex items-center justify-between', styles.header)}>
           <div className='flex flex-col'>
             <h4 className={styles.customizerTitle}>Theme Customizer</h4>
