@@ -1,61 +1,5 @@
 const data = [
   {
-    id: '1',
-    name: 'CRM Dashboard',
-    url: '/dashboards/crm',
-    icon: 'tabler-chart-pie-2',
-    section: 'Dashboards'
-  },
-  {
-    id: '2',
-    name: 'Analytics Dashboard',
-    url: '/dashboards/analytics',
-    icon: 'tabler-trending-up',
-    section: 'Dashboards'
-  },
-  {
-    id: '3',
-    name: 'eCommerce Dashboard',
-    url: '/dashboards/ecommerce',
-    icon: 'tabler-shopping-cart',
-    section: 'Dashboards'
-  },
-  {
-    id: '4',
-    name: 'Calendar',
-    url: '/apps/calendar',
-    icon: 'tabler-calendar',
-    section: 'Apps'
-  },
-  {
-    id: '5',
-    name: 'Invoice List',
-    url: '/apps/invoice/list',
-    icon: 'tabler-file-description',
-    section: 'Apps'
-  },
-  {
-    id: '6',
-    name: 'Invoice Preview',
-    url: '/apps/invoice/preview/4987',
-    icon: 'tabler-file-info',
-    section: 'Apps'
-  },
-  {
-    id: '7',
-    name: 'Invoice Edit',
-    url: '/apps/invoice/edit/4987',
-    icon: 'tabler-file-pencil',
-    section: 'Apps'
-  },
-  {
-    id: '8',
-    name: 'Invoice Add',
-    url: '/apps/invoice/add',
-    icon: 'tabler-file-plus',
-    section: 'Apps'
-  },
-  {
     id: '9',
     name: 'User List',
     url: '/apps/user/list',
@@ -97,41 +41,7 @@ const data = [
     icon: 'tabler-settings',
     section: 'Pages'
   },
-  {
-    id: '15',
-    name: 'FAQ',
-    url: '/pages/faq',
-    icon: 'tabler-help-circle',
-    section: 'Pages'
-  },
-  {
-    id: '16',
-    name: 'Pricing',
-    url: '/pages/pricing',
-    icon: 'tabler-currency-dollar',
-    section: 'Pages'
-  },
-  {
-    id: '17',
-    name: 'Coming Soon',
-    url: '/pages/misc/coming-soon',
-    icon: 'tabler-clock-hour-3',
-    section: 'Pages'
-  },
-  {
-    id: '18',
-    name: 'Under Maintenance',
-    url: '/pages/misc/under-maintenance',
-    icon: 'tabler-settings-cog',
-    section: 'Pages'
-  },
-  {
-    id: '19',
-    name: 'Page Not Found - 404',
-    url: '/pages/misc/404-not-found',
-    icon: 'tabler-info-circle',
-    section: 'Pages'
-  },
+  
   {
     id: '20',
     name: 'Not Authorized - 401',
@@ -139,41 +49,7 @@ const data = [
     icon: 'tabler-user-cancel',
     section: 'Pages'
   },
-  {
-    id: '21',
-    name: 'Login V1',
-    url: '/pages/auth/login-v1',
-    icon: 'tabler-login-2',
-    section: 'Pages'
-  },
-  {
-    id: '22',
-    name: 'Login V2',
-    url: '/pages/auth/login-v2',
-    icon: 'tabler-login-2',
-    section: 'Pages'
-  },
-  {
-    id: '23',
-    name: 'Register V1',
-    url: '/pages/auth/register-v1',
-    icon: 'tabler-user-plus',
-    section: 'Pages'
-  },
-  {
-    id: '24',
-    name: 'Register V2',
-    url: '/pages/auth/register-v2',
-    icon: 'tabler-user-plus',
-    section: 'Pages'
-  },
-  {
-    id: '25',
-    name: 'Register Multi-Steps',
-    url: '/pages/auth/register-multi-steps',
-    icon: 'tabler-user-plus',
-    section: 'Pages'
-  },
+
   {
     id: '26',
     name: 'Forgot Password V1',
@@ -202,118 +78,8 @@ const data = [
     icon: 'tabler-refresh',
     section: 'Pages'
   },
-  {
-    id: '30',
-    name: 'Verify Email V1',
-    url: '/pages/auth/verify-email-v1',
-    icon: 'tabler-mail-check',
-    section: 'Pages'
-  },
-  {
-    id: '31',
-    name: 'Verify Email V2',
-    url: '/pages/auth/verify-email-v2',
-    icon: 'tabler-mail-check',
-    section: 'Pages'
-  },
-  {
-    id: '32',
-    name: 'Two Steps V1',
-    url: '/pages/auth/two-steps-v1',
-    icon: 'tabler-devices',
-    section: 'Pages'
-  },
-  {
-    id: '33',
-    name: 'Two Steps V2',
-    url: '/pages/auth/two-steps-v2',
-    icon: 'tabler-devices',
-    section: 'Pages'
-  },
-  {
-    id: '34',
-    name: 'Wizard - Checkout',
-    url: '/pages/wizard-examples/checkout',
-    icon: 'tabler-shopping-cart-check',
-    section: 'Pages'
-  },
-  {
-    id: '35',
-    name: 'Wizard - Property Listing',
-    url: '/pages/wizard-examples/property-listing',
-    icon: 'tabler-building',
-    section: 'Pages'
-  },
-  {
-    id: '36',
-    name: 'Wizard - Create Deal',
-    url: '/pages/wizard-examples/create-deal',
-    icon: 'tabler-gift',
-    section: 'Pages'
-  },
-  {
-    id: '37',
-    name: 'Dialog Examples',
-    url: '/pages/dialog-examples',
-    icon: 'tabler-device-desktop',
-    section: 'Pages'
-  },
-  {
-    id: '38',
-    name: 'Widget - Basic',
-    url: '/pages/widget-examples/basic',
-    icon: 'tabler-square',
-    section: 'Pages'
-  },
-  {
-    id: '39',
-    name: 'Widget - Advanced',
-    url: '/pages/widget-examples/advanced',
-    icon: 'tabler-file-spreadsheet',
-    section: 'Pages'
-  },
-  {
-    id: '40',
-    name: 'Widget - Statistics',
-    url: '/pages/widget-examples/statistics',
-    icon: 'tabler-align-box-bottom-center',
-    section: 'Pages'
-  },
-  {
-    id: '41',
-    name: 'Widget - Charts',
-    url: '/pages/widget-examples/charts',
-    icon: 'tabler-chart-histogram',
-    section: 'Pages'
-  },
-  {
-    id: '42',
-    name: 'Widget - Actions',
-    url: '/pages/widget-examples/actions',
-    icon: 'tabler-square-plus',
-    section: 'Pages'
-  },
-  {
-    id: '43',
-    name: 'Form Layouts',
-    url: '/forms/form-layouts',
-    icon: 'tabler-layout',
-    section: 'Forms & Tables'
-  },
-  {
-    id: '44',
-    name: 'Form Validation',
-    url: '/forms/form-validation',
-    icon: 'tabler-checkup-list',
-    section: 'Forms & Tables'
-  },
-  {
-    id: '45',
-    name: 'Form Wizard',
-    url: '/forms/form-wizard',
-    icon: 'tabler-git-merge',
-    section: 'Forms & Tables'
-  },
+  
+  
   {
     id: '46',
     name: 'React Table',
@@ -321,20 +87,7 @@ const data = [
     icon: 'tabler-table',
     section: 'Forms & Tables'
   },
-  {
-    id: '47',
-    name: 'Apex Charts',
-    url: '/charts/apex-charts',
-    icon: 'tabler-chart-ppf',
-    section: 'Charts'
-  },
-  {
-    id: '48',
-    name: 'Recharts',
-    url: '/charts/recharts',
-    icon: 'tabler-chart-sankey',
-    section: 'Charts'
-  },
+
   {
     id: '49',
     name: 'Menu Examples',

@@ -1,0 +1,463 @@
+.ProseMirror {
+  @apply caret-black dark:caret-white outline-0 pr-8 pl-20 py-16 z-0 lg:pl-8 lg:pr-8 mx-auto max-w-2xl;
+
+  .selection {
+    @apply inline-block;
+  }
+
+  .selection,
+  *::selection {
+    @apply bg-black/10 dark:bg-white/20 inline-block;
+  }
+
+  &>.react-renderer {
+    @apply my-12 first:mt-0 last:mb-0;
+  }
+
+  &.resize-cursor {
+    @apply cursor-col-resize;
+  }
+
+  .ProseMirror-gapcursor {
+    @apply relative w-full max-w-2xl mx-auto;
+
+    &:after {
+      @apply border-t-black/40 dark:border-t-white/40 w-full -top-[1.5em] max-w-2xl mx-auto left-0 right-0;
+    }
+  }
+}
+
+[data-theme='slash-command'] {
+  width: 1000vw;
+}
+
+
+.fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  /* Para que ocupe toda la altura de la pantalla */
+}
+
+@import './partials/animations.css';
+@import './partials/blocks.css';
+@import './partials/code.css';
+@import './partials/collab.css';
+@import './partials/lists.css';
+@import './partials/placeholder.css';
+@import './partials/table.css';
+@import './partials/typography.css';
+
+/* Contenedor del contenido del comentario */
+.comment-comparison {
+  max-height: 100px;
+  /* Limita la altura máxima */
+  overflow-y: auto;
+  /* Agrega scroll vertical si el contenido excede */
+  padding: 8px;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* Scroll personalizado para mejor apariencia */
+.comment-comparison::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comment-comparison::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 4px;
+}
+
+.comment-comparison::-webkit-scrollbar-track {
+  background: #edf2f7;
+}
+
+/* Asegurar que las acciones estén bien alineadas */
+.comment-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+/* Botones compactos de acción */
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #e5e7eb;
+}
+
+.action-button.active {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.decision-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.decision-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.decision-button.accept {
+  color: #10b981;
+}
+
+.decision-button.reject {
+  color: #ef4444;
+}
+
+/* Contenedor principal del comentario */
+.sidebar-comentario {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Tarjeta de comentario */
+.comment-card {
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cada comentario individual */
+.comment-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Cabecera del comentario */
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Icono de usuario */
+.user-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #4b5563;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+/* Información del usuario */
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilo para nombre y tipo de comentario */
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.comment-type {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Contenido del comentario */
+.comment-content {
+  background-color: #f3f4f6;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Contenedor de acciones (likes, dislikes, aceptar/rechazar) */
+.comment-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Botones de acción */
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #e5e7eb;
+}
+
+/* Estilo para botones activos */
+.action-button.active {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Botones de aceptar/rechazar */
+.decision-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.decision-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.decision-button:hover {
+  transform: scale(1.1);
+}
+
+.decision-button.accept {
+  color: #10b981;
+}
+
+.decision-button.reject {
+  color: #ef4444;
+}
+
+/* Estilo para mensajes sin comentarios */
+.no-comments {
+  text-align: center;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.main-content {
+  padding-top: 4rem;
+  /* Ajusta según sea necesario */
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.button-like {
+  background-color: #3b82f6;
+  /* Azul claro */
+  color: white;
+}
+
+.button-like:hover {
+  background-color: #2563eb;
+}
+
+.button-dislike {
+  background-color: #ef4444;
+  /* Rojo claro */
+  color: white;
+}
+
+.button-dislike:hover {
+  background-color: #dc2626;
+}
+
+.button-accept {
+  background-color: #22c55e;
+  /* Verde */
+  color: white;
+}
+
+.button-accept:hover {
+  background-color: #16a34a;
+}
+
+.button-reject {
+  background-color: #f87171;
+  /* Rojo */
+  color: white;
+}
+
+.button-reject:hover {
+  background-color: #ef4444;
+}
+
+.counter {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 18px;
+}
+
+.button-accept {
+  background-color: #34d399;
+  /* Verde */
+  color: white;
+}
+
+.button-accept:hover {
+  background-color: #10b981;
+  transform: scale(1.1);
+}
+
+.button-reject {
+  background-color: #f87171;
+  /* Rojo */
+  color: white;
+}
+
+.button-reject:hover {
+  background-color: #ef4444;
+  transform: scale(1.1);
+}
+
+.button-like,
+.button-dislike {
+  background-color: transparent;
+  color: #6b7280;
+  font-size: 20px;
+  padding: 5px;
+}
+
+.button-like:hover {
+  color: #10b981;
+  transform: scale(1.2);
+}
+
+.button-dislike:hover {
+  color: #ef4444;
+  transform: scale(1.2);
+}
+
+.counter {
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+.comment-container {
+  position: relative;
+  padding-bottom: 40px;
+  /* Espacio para los botones */
+}
+
+.comment-buttons {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 18px;
+}
+
+.button-accept {
+  background-color: #34d399;
+  /* Verde */
+  color: white;
+}
+
+.button-accept:hover {
+  background-color: #10b981;
+  transform: scale(1.1);
+}
+
+.button-reject {
+  background-color: #f87171;
+  /* Rojo */
+  color: white;
+}
+
+.button-reject:hover {
+  background-color: #ef4444;
+  transform: scale(1.1);
+}
+
+
+/* Contenedor principal */
+.block-editor-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.editor-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  transition: margin-right 0.3s ease-in-out;
+}
+
+.editor-wrapper.with-sidebar {
+  margin-right: 320px;
+}
+
+.editor-content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+}
+
+.sidebar-comentario-container {
+  width: 320px;
+  background-color: #f5f5f5;
+  border-left: 1px solid #ddd;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1000;
+}
