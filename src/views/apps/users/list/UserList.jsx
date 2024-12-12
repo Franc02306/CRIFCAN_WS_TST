@@ -141,7 +141,7 @@ const UserList = ({ users, onUserAdded, getListUsers, statusFilter }) => {
       icon: 'warning',
       showCancelButton: true,
       showConfirmButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Sí, restaurar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: confirmButtonColor,
       cancelButtonColor: cancelButtonColor,

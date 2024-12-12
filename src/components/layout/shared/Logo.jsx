@@ -4,15 +4,17 @@
 import { useEffect, useRef } from 'react'
 
 // Next Imports
-// import Img from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 // Third-party Imports
+import Image from 'next/image'
+
 import styled from '@emotion/styled'
 
-// Component Imports
-import VuexyLogo from '@core/svg/Logo'
+// Importar los logos
+import logoFull from '../../../../public/images/illustrations/auth/LogoSGCAN (horizontal).png' // Logo grande cuando el menú está expandido
+import logoCollapsed from '../../../../public/images/illustrations/auth/LogoSGCANV.png' // Logo pequeño cuando el menú está colapsado
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
@@ -34,7 +36,7 @@ const LogoText = styled.span`
     `margin-inline-start ${transitionDuration}ms ease-in-out, opacity ${transitionDuration}ms ease-in-out`};
 
   ${({ isHovered, isCollapsed }) =>
-    isCollapsed && !isHovered ? 'opacity: 0; margin-inline-start: 0;' : 'opacity: 1; margin-inline-start: 12px;'}
+    isCollapsed && !isHovered ? 'opacity: 0; margin-inline-start: 0;' : 'opacity: 1; margin-inline-start: 12px;'};
 `
 
 const Logo = () => {
@@ -64,19 +66,28 @@ const Logo = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHovered, layout])
 
-  // You may return any JSX here to display a logo in the sidebar header
-  // return <Img src='/next.svg' width={100} height={25} alt='logo' /> // for example
+  // Cambia el logo según si el layout está colapsado o expandido
+  const logoSrc = layout === 'collapsed' ? logoCollapsed : logoFull
+
   return (
     <Link href={getLocalizedUrl('/', locale)} className='flex items-center'>
-      <VuexyLogo className='text-2xl text-primary' />
-      <LogoText
-        ref={logoTextRef}
-        isHovered={isHovered}
-        isCollapsed={layout === 'collapsed'}
-        transitionDuration={transitionDuration}
-      >
-        {themeConfig.templateName}
-      </LogoText>
+      <Image
+        src={logoSrc}
+        width={layout === 'collapsed' ? 50 : 200}
+        height={layout === 'collapsed' ? 50 : 50}
+        alt='logo'
+      />
+      {/* LogoText solo se mostrará si el menú está expandido */}
+      {layout !== 'collapsed' && (
+        <LogoText
+          ref={logoTextRef}
+          isHovered={isHovered}
+          isCollapsed={layout === 'collapsed'}
+          transitionDuration={transitionDuration}
+        >
+          {/* {themeConfig.templateName} */}
+        </LogoText>
+      )}
     </Link>
   )
 }
