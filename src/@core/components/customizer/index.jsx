@@ -56,7 +56,9 @@ const DebouncedColorPicker = props => {
   const { settings, isColorFromPrimaryConfig, handleChange } = props
 
   // States
-  const [debouncedColor, setDebouncedColor] = useState(settings.primaryColor ?? primaryColorConfig[0].main)
+  const defaultPrimaryColor = primaryColorConfig.find(item => item.name === 'primary-2')?.main ?? primaryColorConfig[0].main
+  const [debouncedColor, setDebouncedColor] = useState(settings.primaryColor ?? defaultPrimaryColor)
+
 
   // Hooks
   useDebounce(() => handleChange('primaryColor', debouncedColor), 200, [debouncedColor])
@@ -322,8 +324,8 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
                 </div>
               </div>
               {settings.mode === 'dark' ||
-              (settings.mode === 'system' && isSystemDark) ||
-              settings.layout === 'horizontal' ? null : (
+                (settings.mode === 'system' && isSystemDark) ||
+                settings.layout === 'horizontal' ? null : (
                 <div className='flex items-center justify-between'>
                   <label className='font-medium cursor-pointer' htmlFor='customizer-semi-dark'>
                     Semi Dark
