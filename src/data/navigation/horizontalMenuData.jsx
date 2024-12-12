@@ -24,7 +24,7 @@ const horizontalMenuData = (dictionary, params) => [
   {
     label: dictionary['navigation'].cangpt,
     icon: 'tabler-robot',
-    href: `/en/apps/can-gpt/chat`,
+    href: `/en/apps/can-gpt/chaat`,
   },
   {
     label: dictionary['navigation'].dashboard,

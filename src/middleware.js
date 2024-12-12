@@ -90,6 +90,10 @@ export default withAuth(
       return localizedRedirect(redirectUrl, locale, request);
     }
 
+    console.log('isUserLoggedIn:', isUserLoggedIn);
+    console.log('pathname:', pathname);
+    console.log('privateRoute:', privateRoute);
+
     // Si el usuario no está logueado y está tratando de acceder a una ruta privada
     if (!isUserLoggedIn && privateRoute && !pathname.endsWith('/login')) {
       let redirectUrl = '/login';
