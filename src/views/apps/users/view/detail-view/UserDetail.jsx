@@ -25,12 +25,7 @@ export function UserDetail({ id, user }) {
       setIsLoading(true)
       const response = await getUserById(id)
 
-      console.log("respuesta completa de user: ", response)
-
       setUserData(response.data)
-
-      // Agrega el console.log para ver lo que trae userData
-      console.log("Datos del usuario:", response.data)
 
       setIsLoading(false)
     }

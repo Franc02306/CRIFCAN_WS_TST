@@ -73,7 +73,6 @@ const refreshToken = async () => {
 
       if (data.access_token) {
         // Actualizamos el access_token en la sesión y en localStorage
-        console.log('Token refreshed successfully')
         localStorage.setItem('token', data.access_token)
 
         return data.access_token

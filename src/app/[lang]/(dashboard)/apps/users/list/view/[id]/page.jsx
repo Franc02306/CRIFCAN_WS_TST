@@ -16,8 +16,6 @@ const VerPage = ({ params }) => {
   // Vars
   const { id } = params
 
-  console.log('id', id)
-
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [user, setUser] = useState()
 

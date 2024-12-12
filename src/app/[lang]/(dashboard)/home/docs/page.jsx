@@ -13,8 +13,6 @@ const Page = () => {
   // const router = useRouter();
 
   // useEffect(() => {
-  //   console.log(status)
-  //   console.log(session)
 
   //   if (status === 'unauthenticated') {
   //     Swal.fire({

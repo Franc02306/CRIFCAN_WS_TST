@@ -131,7 +131,6 @@ const Login = ({ mode }) => {
     if (res && res.ok && res.error === null) {
       const tokenFromStorage = localStorage.getItem('token');
 
-      console.log('Token almacenado en localStorage:', tokenFromStorage);
       const redirectURL = searchParams.get('redirectTo') ?? '/'
       
       router.push(getLocalizedUrl(redirectURL, locale))

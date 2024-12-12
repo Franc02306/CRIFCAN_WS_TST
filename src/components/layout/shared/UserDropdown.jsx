@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Next Imports
 import { useParams, useRouter } from 'next/navigation'
@@ -28,6 +28,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+import { getUserById } from '../../../service/userService'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -51,9 +52,44 @@ const UserDropdown = () => {
   const { data: session } = useSession()
   const { settings } = useSettings()
   const { lang: locale } = useParams()
+  const [userData, setUserData] = useState(null) // ESTADO PARA ALMACENAR DATOS DEL USUARIO
+  const [loading, setLoading] = useState(false) // ESTADO DE CARGA
+
+  const fetchUserData = async () => {
+    if (session?.user?.id && session?.accessToken) {
+      setLoading(true);
+
+      try {
+        const response = await getUserById(session.user.id);
+
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Error obteniendo los datos del usuario:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      console.log('No se encontró el ID del usuario o el token en la sesión');
+    }
+  }
+
+  const countryCodes = {
+    Bolivia: 'BO',
+    Colombia: 'CO',
+    Ecuador: 'EC',
+    Perú: 'PE'
+  }
+
+  const getCountryCode = (description) => {
+    return countryCodes[description] || '';
+  };
 
   const handleDropdownOpen = () => {
     !open ? setOpen(true) : setOpen(false)
+
+    if (!userData && !loading) {
+      fetchUserData();
+    }
   }
 
   const handleDropdownClose = (event, url) => {
@@ -83,6 +119,26 @@ const UserDropdown = () => {
     }
   }
 
+  const getInitials = (name) => {
+    const names = name.split(' ');
+
+    if (names.length === 1) {
+      return names[0].charAt(0).toUpperCase();
+    }
+
+    return names[0].charAt(0).toUpperCase() + names[1].charAt(0).toUpperCase();
+  };
+
+  const UserAvatar = ({ name }) => {
+    const initials = getInitials(name);
+
+    return (
+      <Avatar>
+        <Typography variant="body2">{initials}</Typography>
+      </Avatar>
+    )
+  }
+
   return (
     <>
       <Badge
@@ -98,7 +154,9 @@ const UserDropdown = () => {
           src={session?.user?.image || ''}
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
-        />
+        >
+          <UserAvatar name={session?.user?.name || ' '} />
+        </Avatar>
       </Badge>
       <Popper
         open={open}
@@ -119,10 +177,28 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
-                    <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />
+                    <Avatar
+                      alt={session?.user?.name || ''}
+                      src={session?.user?.image || ''}
+                      sx={{
+                        color: 'white'
+                      }}
+                    >
+                      {!session?.user?.image && getInitials(session?.user?.name || '')}
+                    </Avatar>
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
                         {session?.user?.name || ''}
+                        {userData?.country || userData?.institution ? (
+                          <span>
+                            {' '}
+                            (
+                            {userData?.country ? getCountryCode(userData.country.description) : ''}
+                            {userData?.country && userData?.institution ? ' - ' : ''}
+                            {userData?.institution?.name || ''}
+                            )
+                          </span>
+                        ) : null}
                       </Typography>
                       <Typography variant='caption'>{session?.user?.email || ''}</Typography>
                     </div>
@@ -130,20 +206,20 @@ const UserDropdown = () => {
                   <Divider className='mlb-1' />
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
                     <i className='tabler-user text-[22px]' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                    <Typography color='text.primary'>Mi Perfil</Typography>
                   </MenuItem>
-                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
+                  {/* <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
                     <i className='tabler-settings text-[22px]' />
-                    <Typography color='text.primary'>Settings</Typography>
-                  </MenuItem>
-                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
+                    <Typography color='text.primary'>Ajustes</Typography>
+                  </MenuItem> */}
+                  {/* <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
                     <i className='tabler-currency-dollar text-[22px]' />
                     <Typography color='text.primary'>Pricing</Typography>
                   </MenuItem>
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/faq')}>
                     <i className='tabler-help-circle text-[22px]' />
                     <Typography color='text.primary'>FAQ</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
                   <div className='flex items-center plb-2 pli-3'>
                     <Button
                       fullWidth
@@ -154,7 +230,7 @@ const UserDropdown = () => {
                       onClick={handleUserLogout}
                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
-                      Logout
+                      Cerrar Sesión
                     </Button>
                   </div>
                 </MenuList>

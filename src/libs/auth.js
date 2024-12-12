@@ -9,8 +9,6 @@ export const authOptions = {
       async authorize(credentials) {
         const { email, password } = credentials
 
-        console.log("Credentials:", credentials);
-
         try {
           const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/login/`, {
             method: 'POST',
@@ -22,14 +20,11 @@ export const authOptions = {
 
           const data = await res.json()
 
-          console.log("Response data:", data);
-
           if (res.status === 401) {
             throw new Error(JSON.stringify(data))
           }
 
           if (res.status === 200 && data.user) {
-            console.log("User data:", data.user);
 
             return {
               user: {
@@ -67,7 +62,6 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        console.log("User data in JWT callback:", user);
         
         token.userId = user.user.id;
         token.name = user.user.name;
@@ -81,7 +75,6 @@ export const authOptions = {
         token.accessToken = user.access_token;
         token.refreshToken = user.refresh_token;
 
-        console.log("JWT Token:", token);
       }
 
       return token
@@ -100,8 +93,6 @@ export const authOptions = {
 
         session.accessToken = token.accessToken;
         session.refreshToken = token.refreshToken
-        console.log("Session:", session);
-        console.log("System role:", session?.user?.system_role);
       }
 
       return session

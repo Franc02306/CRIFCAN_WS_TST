@@ -1,32 +1,39 @@
 // Next Imports
+'use client'
+import { useEffect, useState } from 'react'
+
 import dynamic from 'next/dynamic'
+
+import { useSession } from 'next-auth/react'
 
 // Component Imports
 import UserProfile from '@views/pages/user-profile'
 
 const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
 
-// Vars
-const tabContentList = data => ({
-  profile: <ProfileTab data={data?.users.profile} />,
-})
+const ProfilePage = () => {
+  const { data: session, status } = useSession()
+  const [userData, setUserData] = useState(null)
 
-const getData = async () => {
-  // Vars
-  const res = await fetch(`${process.env.API_URL}/pages/profile`)
+  useEffect(() => {
+    if (session) {
+      setUserData(session.user)
+    }
+  }, [session])
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch profileData')
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
 
-  return res.json()
-}
+  if (!session) {
+    return <div>Please log in</div>
+  }
 
-const ProfilePage = async () => {
-  // Vars
-  const data = await getData()
+  const tabContentList = {
+    profile: <ProfileTab data={userData} />
+  }
 
-  return <UserProfile data={data} tabContentList={tabContentList(data)} />
+  return <UserProfile data={userData} tabContentList={tabContentList} />
 }
 
 export default ProfilePage
