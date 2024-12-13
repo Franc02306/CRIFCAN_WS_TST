@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = withBundleAnalyzer({
   basePath: process.env.BASEPATH,
+  distDir: 'build',
   redirects: async () => {
     return [
       {
