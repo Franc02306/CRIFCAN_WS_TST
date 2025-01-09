@@ -201,6 +201,12 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
     }
   }
 
+  const validateEmailOnSubmit = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|co|io|ai)$/;
+
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async () => {
     if (isSubmitting) return
 
@@ -210,6 +216,14 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
       setIsSubmitting(false)
 
       return
+    }
+
+    if (!validateEmailOnSubmit(formData.email)) {
+      setWarnMessage('El correo electrónico tiene un formato inválido.');
+      setOpenWarnSnackbar(true);
+      setIsSubmitting(false);
+      
+      return;
     }
 
     const payload = {
