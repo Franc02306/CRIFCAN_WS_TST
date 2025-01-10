@@ -169,29 +169,49 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
     return true
   }
 
-  const handleUsernameChange = e => {
-    const value = e.target.value
-    const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/
-
-    if (regex.test(value) && validateUsername(value)) {
-      setFormData({ ...formData, username: value })
-    } else {
-      setInfoMessage('El campo Nombres solo puede contener letras.')
-      setOpenInfoSnackbar(true)
+  const handleUsernameChange = (e) => {
+    const value = e.target.value;
+    const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/;
+    const maxLength = 100;
+  
+    if (value.length > maxLength) {
+      setInfoMessage(`Longitud máxima alcanzada: ${maxLength} caracteres en el campo Nombres.`);
+      setOpenInfoSnackbar(true);
+      
+      return;
     }
+  
+    if (!regex.test(value)) {
+      setInfoMessage("El campo Nombres solo puede contener letras.");
+      setOpenInfoSnackbar(true);
+
+      return;
+    }
+  
+    setFormData({ ...formData, username: value });
+  };
+
+  const handleLastNameChange = (e) => {
+  const value = e.target.value;
+  const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/;
+  const maxLength = 100;
+
+  if (value.length > maxLength) {
+    setInfoMessage(`Longitud máxima alcanzada: ${maxLength} caracteres en el campo Apellidos.`);
+    setOpenInfoSnackbar(true);
+    
+    return;
   }
 
-  const handleLastNameChange = e => {
-    const value = e.target.value
-    const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/
+  if (!regex.test(value)) {
+    setInfoMessage("El campo Apellidos solo puede contener letras.");
+    setOpenInfoSnackbar(true);
 
-    if (regex.test(value) && validateLastName(value)) {
-      setFormData({ ...formData, last_name: value })
-    } else {
-      setInfoMessage('El campo Apellidos solo puede contener letras.')
-      setOpenInfoSnackbar(true)
-    }
+    return;
   }
+
+  setFormData({ ...formData, last_name: value });
+};
 
   const handleEmailChange = e => {
     const value = e.target.value
@@ -341,7 +361,7 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
                 autoComplete='off'
                 margin='dense'
                 variant='outlined'
-                label='Apellido'
+                label='Apellidos'
                 type='text'
                 name='last_name'
                 value={formData.last_name}
