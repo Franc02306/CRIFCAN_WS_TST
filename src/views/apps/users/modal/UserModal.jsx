@@ -130,32 +130,6 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
     setOpenErrorSnackbar(false)
   }
 
-  const validateUsername = value => {
-    const maxLength = 100
-
-    if (value.length > maxLength) {
-      setInfoMessage('Longitud máxima alcanzada: 100 caracteres en el campo Nombres.')
-      setOpenInfoSnackbar(true)
-
-      return false
-    }
-
-    return true
-  }
-
-  const validateLastName = value => {
-    const maxLength = 100
-
-    if (value.length > maxLength) {
-      setInfoMessage('Longitud máxima alcanzada: 100 caracteres en el campo Apellidos.')
-      setOpenInfoSnackbar(true)
-
-      return false
-    }
-
-    return true
-  }
-
   const validateEmail = value => {
     const maxLength = 200
 
@@ -169,49 +143,87 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
     return true
   }
 
+  const validatePassword = (password) => {
+    const errors = [];
+
+    if (!password) {
+      errors.push("El campo Contraseña es obligatorio.");
+    } else {
+      if (!/[A-Z]/.test(password)) {
+        errors.push("La contraseña debe contener al menos una letra mayúscula.");
+      }
+
+      if (!/[a-z]/.test(password)) {
+        errors.push("La contraseña debe contener al menos una letra minúscula.");
+      }
+
+      if (!/[0-9]/.test(password)) {
+        errors.push("La contraseña debe contener al menos un número.");
+      }
+
+      if (!/[@$!%*?&#]/.test(password)) {
+        errors.push("La contraseña debe contener al menos un carácter especial (ej. @$!%*?&).");
+      }
+
+      if (/[^A-Za-z0-9@$!%*?&#]/.test(password)) {
+        errors.push("La contraseña contiene caracteres no permitidos.");
+      }
+
+      if (password.length < 6) {
+        errors.push("La contraseña debe tener al menos 6 caracteres.");
+      }
+
+      if (password.length > 100) {
+        errors.push("La contraseña no debe exceder los 100 caracteres.");
+      }
+    }
+
+    return errors;
+  };
+
   const handleUsernameChange = (e) => {
     const value = e.target.value;
     const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/;
     const maxLength = 100;
-  
+
     if (value.length > maxLength) {
       setInfoMessage(`Longitud máxima alcanzada: ${maxLength} caracteres en el campo Nombres.`);
       setOpenInfoSnackbar(true);
-      
+
       return;
     }
-  
+
     if (!regex.test(value)) {
       setInfoMessage("El campo Nombres solo puede contener letras.");
       setOpenInfoSnackbar(true);
 
       return;
     }
-  
+
     setFormData({ ...formData, username: value });
   };
 
   const handleLastNameChange = (e) => {
-  const value = e.target.value;
-  const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/;
-  const maxLength = 100;
+    const value = e.target.value;
+    const regex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*$/;
+    const maxLength = 100;
 
-  if (value.length > maxLength) {
-    setInfoMessage(`Longitud máxima alcanzada: ${maxLength} caracteres en el campo Apellidos.`);
-    setOpenInfoSnackbar(true);
-    
-    return;
-  }
+    if (value.length > maxLength) {
+      setInfoMessage(`Longitud máxima alcanzada: ${maxLength} caracteres en el campo Apellidos.`);
+      setOpenInfoSnackbar(true);
 
-  if (!regex.test(value)) {
-    setInfoMessage("El campo Apellidos solo puede contener letras.");
-    setOpenInfoSnackbar(true);
+      return;
+    }
 
-    return;
-  }
+    if (!regex.test(value)) {
+      setInfoMessage("El campo Apellidos solo puede contener letras.");
+      setOpenInfoSnackbar(true);
 
-  setFormData({ ...formData, last_name: value });
-};
+      return;
+    }
+
+    setFormData({ ...formData, last_name: value });
+  };
 
   const handleEmailChange = e => {
     const value = e.target.value
@@ -242,7 +254,17 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
       setWarnMessage('El correo electrónico tiene un formato inválido.');
       setOpenWarnSnackbar(true);
       setIsSubmitting(false);
-      
+
+      return;
+    }
+
+    const passwordErrors = validatePassword(formData.password);
+
+    if (passwordErrors.length > 0) {
+      setWarnMessage(passwordErrors.join(" "));
+      setOpenWarnSnackbar(true);
+      setIsSubmitting(false);
+
       return;
     }
 
