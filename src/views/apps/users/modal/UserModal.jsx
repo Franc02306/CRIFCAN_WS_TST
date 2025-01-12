@@ -258,7 +258,7 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
       return;
     }
 
-    const passwordErrors = validatePassword(formData.password);
+    const passwordErrors = isEditMode && !formData.password ? [] : validatePassword(formData.password);
 
     if (passwordErrors.length > 0) {
       setWarnMessage(passwordErrors.join(" "));
