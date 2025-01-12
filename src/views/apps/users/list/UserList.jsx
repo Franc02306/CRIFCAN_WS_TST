@@ -192,6 +192,10 @@ const UserList = ({ users, onUserAdded, getListUsers, statusFilter }) => {
     setModalMode('create')
   }
 
+  useEffect(() => {
+    setPage(0);
+  }, [emailFilter, roleFilter]);  
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 3 }}>
       <Box sx={{ padding: 5 }}>
