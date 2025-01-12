@@ -161,11 +161,11 @@ const UserModal = ({ open, setIsModalOpen, onClose, onUserAdded, user, mode }) =
         errors.push("La contraseña debe contener al menos un número.");
       }
 
-      if (!/[@$!%*?&#]/.test(password)) {
-        errors.push("La contraseña debe contener al menos un carácter especial (ej. @$!%*?&).");
+      if (!/[@$!%*?&#_]/.test(password)) {
+        errors.push("La contraseña debe contener al menos un carácter especial (ej. @$!%*?&_).");
       }
 
-      if (/[^A-Za-z0-9@$!%*?&#]/.test(password)) {
+      if (/[^A-Za-z0-9@$!%*?&#_]/.test(password)) {
         errors.push("La contraseña contiene caracteres no permitidos.");
       }
 
