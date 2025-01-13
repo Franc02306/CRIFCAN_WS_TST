@@ -39,6 +39,8 @@ const initialData = {
 const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }) => {
   const [formData, setFormData] = useState(initialData)
   const [warnMessage, setWarnMessage] = useState('')
+  const [infoMessage, setInfoMessage] = useState('')
+  const [openInfoSnackbar, setOpenInfoSnackbar] = useState(false)
   const [openWarnSnackbar, setOpenWarnSnackbar] = useState(false)
   const [error, setError] = useState(null)
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
@@ -98,6 +100,10 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
     setOpenWarnSnackbar(false)
   }
 
+  const handleCloseInfoSnackbar = () => {
+    setOpenInfoSnackbar(false)
+  }
+
   const handleCloseErrorSnackbar = () => {
     setOpenErrorSnackbar(false)
   }
@@ -152,6 +158,30 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
       setIsSubmitting(false)
     }
   }
+
+  const handleSobrenombreChange = (e) => {
+    let value = e.target.value;
+
+    value = value.replace(/ /g, '_');
+
+    const validRegex = /^[A-Za-z0-9_]*$/;
+
+    if (!validRegex.test(value)) {
+      setInfoMessage('El campo Sobrenombre solo puede contener letras, números y guiones bajos.');
+      setOpenInfoSnackbar(true);
+
+      return;
+    }
+
+    if (value.length > 30) {
+      setInfoMessage('Longitud máxima alcanzada: 30 caracteres en el campo Sobrenombre.');
+      setOpenInfoSnackbar(true);
+
+      return;
+    }
+
+    setFormData({ ...formData, sobrenombre: value });
+  };
 
   return (
     <>
@@ -217,11 +247,7 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
                 type='text'
                 name='sobrenombre'
                 value={formData.sobrenombre}
-                onChange={e => {
-                  const updatedValue = e.target.value.toUpperCase().replace(/ /g, '_')
-                  
-                  setFormData({ ...formData, sobrenombre: updatedValue })
-                }}
+                onChange={handleSobrenombreChange}
                 fullWidth
               />
             </Grid>
@@ -271,6 +297,28 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
           }}
         >
           {warnMessage}
+        </Alert>
+      </Snackbar>
+
+      {/* Snackbar para mostrar info */}
+      <Snackbar
+        open={openInfoSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseInfoSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleCloseInfoSnackbar}
+          severity='info'
+          sx={{
+            width: '100%',
+            backgroundColor: 'rgba(100, 200, 255, 0.8)',
+            color: '#000',
+            fontWeight: '600',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.9)'
+          }}
+        >
+          {infoMessage}
         </Alert>
       </Snackbar>
 
