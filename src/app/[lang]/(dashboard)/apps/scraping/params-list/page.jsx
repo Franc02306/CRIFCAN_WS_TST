@@ -38,16 +38,16 @@ const ParamsListApp = () => {
           // Llamo a getUrlByParams pasando el valor del parámetro 'url' directamente
           const { data } = await getUrlByParams(urlItem.url)
 
-          if (data.scraped_data && data.scraped_data.length > 0) {
-            // Ordeno las entradas de scraped_data por fecha y mantengo la más reciente
-            const sortedData = data.scraped_data.sort((a, b) => new Date(b.Fecha_scrapper) - new Date(a.Fecha_scrapper))
+          if (data.scraper_data && data.scraper_data.length > 0) {
+            // Ordeno las entradas de scraper_data por fecha y mantengo la más reciente
+            const sortedData = data.scraper_data.sort((a, b) => new Date(b.Fecha_scraper) - new Date(a.Fecha_scraper))
             const recentData = sortedData[0]
 
             // Devuelvo el objeto actualizado con la fecha más reciente
             return {
               ...urlItem,
               url: recentData.Url,
-              updated_at: recentData.Fecha_scrapper
+              updated_at: recentData.Fecha_scraper
             }
           }
         } catch (error) {
