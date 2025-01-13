@@ -162,7 +162,7 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
   const handleSobrenombreChange = (e) => {
     let value = e.target.value;
 
-    value = value.replace(/ /g, '_');
+    value = value.toUpperCase().replace(/ /g, '_');
 
     const validRegex = /^[A-Za-z0-9_]*$/;
 
