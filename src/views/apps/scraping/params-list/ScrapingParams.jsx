@@ -327,85 +327,95 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
               </TableHead>
 
               <TableBody>
-                {sortedWebSites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(site => (
-                  <TableRow key={site.id} sx={{ '&:hover': { backgroundColor: theme.palette.action.hover } }}>
-                    <TableCell
-                      align='center'
-                      sx={{
-                        minWidth: '150px', // Establece un ancho mínimo
-                        maxWidth: '300px',
-                        wordBreak: 'break-word',
-                        whiteSpace: 'normal'
-                      }}
-                    >
-                      {site.sobrenombre}
-                    </TableCell>
-                    <TableCell
-                      align='center'
-                      sx={{
-                        minWidth: '150px', // Establece un ancho mínimo
-                        maxWidth: '80vh',
-                        wordBreak: 'break-word',
-                        whiteSpace: 'normal',
-                        color: theme.palette.primary.contrastText
-                      }}
-                    >
-                      <span
-                        onClick={() => handleOpenUrlModal(site.url)}
-                        style={{
-                          cursor: 'pointer',
-                          fontWeight: 'bold',
-                          textDecoration: 'underline',
-                          color: theme.palette.mode === 'dark' ? 'white' : 'black',
-                          '&:hover': { color: theme.palette.mode === 'dark' ? 'lightgray' : 'secondary.main' }
-                        }}
-                      >
-                        {site.url.length > 100 ? `${site.url.slice(0, 100)}...` : site.url}
-                      </span>
-                    </TableCell>
-                    <TableCell align='center'>
-                      <Select
-                        value={site.time_choices} // El valor inicial de la frecuencia
-                        onChange={e => handleFrequencyChange(e, site)} // Maneja el cambio de frecuencia
-                        fullWidth
-                        size='small'
-                      >
-                        {frequencyOptions.map(option => (
-                          <MenuItem key={option.id} value={option.id}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </TableCell>
-                    <TableCell align='center'>{new Date(site.updated_at).toLocaleDateString()}</TableCell>
-                    <TableCell align='center'>
-                      {loadingSite === site.id ? (
-                        <Box display='flex' alignItems='center' justifyContent='center' gap={1}>
-                          <Typography variant='body2'>Scrapeando...</Typography> {/* Texto "Scrapeando..." */}
-                          <CircularProgress size={20} /> {/* Spinner */}
-                        </Box>
-                      ) : (
-                        <>
-                          <Tooltip title='Editar'>
-                            <IconButton color='info' onClick={() => handleOpenModal(site)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title='Scrapear'>
-                            <IconButton color='success' onClick={() => handleScrapSite(site)}>
-                              <UpdateIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title='Registro de Actividad'>
-                            <IconButton>
-                              <DescriptionIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </>
-                      )}
+                {sortedWebSites.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      <Typography variant="body1" color="secondary">
+                        No se encontraron registros de fuentes web.
+                      </Typography>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  sortedWebSites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(site => (
+                    <TableRow key={site.id} sx={{ '&:hover': { backgroundColor: theme.palette.action.hover } }}>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          minWidth: '150px', // Establece un ancho mínimo
+                          maxWidth: '300px',
+                          wordBreak: 'break-word',
+                          whiteSpace: 'normal',
+                        }}
+                      >
+                        {site.sobrenombre}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          minWidth: '150px', // Establece un ancho mínimo
+                          maxWidth: '80vh',
+                          wordBreak: 'break-word',
+                          whiteSpace: 'normal',
+                          color: theme.palette.primary.contrastText,
+                        }}
+                      >
+                        <span
+                          onClick={() => handleOpenUrlModal(site.url)}
+                          style={{
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            textDecoration: 'underline',
+                            color: theme.palette.mode === 'dark' ? 'white' : 'black',
+                            '&:hover': { color: theme.palette.mode === 'dark' ? 'lightgray' : 'secondary.main' },
+                          }}
+                        >
+                          {site.url.length > 100 ? `${site.url.slice(0, 100)}...` : site.url}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Select
+                          value={site.time_choices} // El valor inicial de la frecuencia
+                          onChange={e => handleFrequencyChange(e, site)} // Maneja el cambio de frecuencia
+                          fullWidth
+                          size="small"
+                        >
+                          {frequencyOptions.map(option => (
+                            <MenuItem key={option.id} value={option.id}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </TableCell>
+                      <TableCell align="center">{new Date(site.updated_at).toLocaleDateString()}</TableCell>
+                      <TableCell align="center">
+                        {loadingSite === site.id ? (
+                          <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
+                            <Typography variant="body2">Scrapeando...</Typography> {/* Texto "Scrapeando..." */}
+                            <CircularProgress size={20} /> {/* Spinner */}
+                          </Box>
+                        ) : (
+                          <>
+                            <Tooltip title="Editar">
+                              <IconButton color="info" onClick={() => handleOpenModal(site)}>
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Scrapear">
+                              <IconButton color="success" onClick={() => handleScrapSite(site)}>
+                                <UpdateIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Registro de Actividad">
+                              <IconButton>
+                                <DescriptionIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
