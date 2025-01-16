@@ -55,7 +55,7 @@ const frequencyOptions = [
   { id: 3, label: 'Semestral' }
 ]
 
-const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
+const ScrapingParams = ({ webSites, fetchWebSites }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [order, setOrder] = useState('asc')
@@ -187,12 +187,7 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
         setSnackbarMessage(response.data.Mensaje || 'Los datos han sido scrapeados correctamente.')
         setSnackbarOpen(true)
 
-        updateSingleWebsite(site.id, {
-          updated_at: new Date().toISOString(), // Fecha de última actualización
-          // status: 'completado' // Ejemplo de estado que puede cambiar
-        })
-
-        // fetchWebSites() // Actualización en tiempo real
+        fetchWebSites() // Actualización en tiempo real
 
       } catch (error) {
         console.error('Error ejecutando el scraping:', error)
@@ -322,6 +317,9 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
                     Última Fecha de Scrapeo
+                  </TableCell>
+                  <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+                    Estado de Scrapeo
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
                     Acciones

@@ -19,9 +19,7 @@ const ParamsListApp = () => {
 
       const response = await listUrls()
 
-      const updatedWebSites = await filterRecentUrls(response.data)
-
-      setWebSites(updatedWebSites)
+      setWebSites(response.data)
     } catch (error) {
       console.error('Error al obtener los sitios de scraping: ', error)
       setError('Algo salió mal, intenta de nuevo más tarde')
@@ -29,47 +27,6 @@ const ParamsListApp = () => {
       setIsLoading(false)
     }
   }, [])
-
-  const filterRecentUrls = async urls => {
-    // Mapeo de URLs de listUrls y comparación con getUrlByParams para mantener la más reciente
-    const updatedUrls = await Promise.all(
-      urls.map(async urlItem => {
-        try {
-          // Llamo a getUrlByParams pasando el valor del parámetro 'url' directamente
-          const { data } = await getUrlByParams(urlItem.url)
-
-          if (data.data && data.data.length > 0) {
-            // Ordeno las entradas de scraper_data por fecha y mantengo la más reciente
-            const sortedData = data.data.sort((a, b) => new Date(b.Fecha_scraper) - new Date(a.Fecha_scraper))
-            const recentData = sortedData[0]
-
-            // Devuelvo el objeto actualizado con la fecha más reciente
-            return {
-              ...urlItem,
-              url: recentData.Url,
-              updated_at: recentData.Fecha_scraper
-            }
-          }
-        } catch (error) {
-          console.error(`Error al obtener datos de scraping para URL ${urlItem.url}:`, error)
-        }
-
-        return urlItem
-      })
-    )
-
-    return updatedUrls
-  }
-
-  const updateSingleWebsite = (siteId, updatedData) => {
-    setWebSites(prevWebSites =>
-      prevWebSites.map(site =>
-        site.id === siteId
-          ? { ...site, ...updatedData }
-          : site
-      )
-    )
-  }
 
   useEffect(() => {
     fetchWebSites()
@@ -108,7 +65,7 @@ const ParamsListApp = () => {
     )
   }
 
-  return <ParamsListIndex webSites={webSites} fetchWebSites={fetchWebSites} updateSingleWebsite={updateSingleWebsite} />
+  return <ParamsListIndex webSites={webSites} fetchWebSites={fetchWebSites} />
 }
 
 export default ParamsListApp
