@@ -319,9 +319,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                     Última Fecha de Scrapeo
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-                    Estado de Scrapeo
-                  </TableCell>
-                  <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
                     Acciones
                   </TableCell>
                 </TableRow>
