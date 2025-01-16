@@ -318,6 +318,9 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
                     Frecuencia de Scrapeo
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+                    Fecha de Creación
+                  </TableCell>
+                  <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
                     Última Fecha de Scrapeo
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
@@ -329,7 +332,7 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
               <TableBody>
                 {sortedWebSites.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} align="center">
+                    <TableCell colSpan={6} align="center">
                       <Typography variant="body1" color="secondary">
                         No se encontraron registros de fuentes web.
                       </Typography>
@@ -386,7 +389,12 @@ const ScrapingParams = ({ webSites, fetchWebSites, updateSingleWebsite }) => {
                           ))}
                         </Select>
                       </TableCell>
-                      <TableCell align="center">{new Date(site.updated_at).toLocaleDateString()}</TableCell>
+                      <TableCell align="center">{new Date(site.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell align="center">
+                        {site.fecha_scraper && !isNaN(new Date(site.fecha_scraper))
+                          ? new Date(site.fecha_scraper).toLocaleDateString()
+                          : "No scrapeado hasta la fecha"}
+                      </TableCell>
                       <TableCell align="center">
                         {loadingSite === site.id ? (
                           <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
