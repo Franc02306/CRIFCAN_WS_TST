@@ -7,9 +7,10 @@ import dynamic from 'next/dynamic'
 import { useSession } from 'next-auth/react'
 
 // Component Imports
-import UserProfile from '@views/pages/user-profile'
+// import UserProfile from '@views/pages/user-profile'
+import UserProfile from '../../../../../views/pages/user-profile/index'
 
-const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
+const ProfileTab = dynamic(() => import('../../../../../views/pages/user-profile/profile/index'))
 
 const ProfilePage = () => {
   const { data: session, status } = useSession()
