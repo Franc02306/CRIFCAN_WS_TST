@@ -182,17 +182,32 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
     if (result.isConfirmed) {
       try {
         setLoadingSite(site.id)
-        const response = await scrapUrl({ url: site.url, tipo: site.type_file })
+        await scrapUrl({ url: site.url, tipo: site.type_file })
 
-        setSnackbarMessage(response.data.Mensaje || 'Los datos han sido scrapeados correctamente.')
-        setSnackbarOpen(true)
+        setLoadingSite(null);
+
+        await Swal.fire({
+          html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Datos scrapeados correctamente</span>`,
+          icon: "success",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: confirmButtonColor,
+          background: backgroundColor,
+        });
 
         fetchWebSites() // Actualización en tiempo real
 
       } catch (error) {
-        console.error('Error ejecutando el scraping:', error)
-        setSnackbarMessage('Hubo un error ejecutando el Scrapeo')
-        setSnackbarOpen(true)
+        console.error('Error interno al scrapear')
+
+        setLoadingSite(null);
+
+        await Swal.fire({
+          html: `<span style="font-family: Arial, sans-serif; font-size: 26px; color: ${titleColor};">Error Interno</span>`,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: cancelButtonColor,
+          background: backgroundColor,
+        });
       } finally {
         setLoadingSite(null)
       }
