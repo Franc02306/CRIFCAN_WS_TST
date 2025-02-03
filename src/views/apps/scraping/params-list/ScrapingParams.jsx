@@ -52,7 +52,8 @@ import { scrapUrl, updateUrl } from '../../../../service/scraperService'
 const frequencyOptions = [
   { id: 1, label: 'Mensual' },
   { id: 2, label: 'Trimestral' },
-  { id: 3, label: 'Semestral' }
+  { id: 3, label: 'Semestral' },
+  { id: 4, label: 'Semanal' }
 ]
 
 const ScrapingParams = ({ webSites, fetchWebSites }) => {

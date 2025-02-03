@@ -262,6 +262,7 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
                   <MenuItem value={1}>Mensual</MenuItem>
                   <MenuItem value={2}>Trimestral</MenuItem>
                   <MenuItem value={3}>Semestral</MenuItem>
+                  <MenuItem value={4}>Semanal</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
