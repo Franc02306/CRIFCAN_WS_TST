@@ -120,16 +120,17 @@ const PhitosanitaryParams = ({ }) => {
 									label="Fecha de Notificación"
 									value={selectedDate}
 									onChange={(newValue) => setSelectedDate(newValue)}
+									size="small"
+									sx={{ width: '300px' }}
 									renderInput={(params) => (
 										<TextField
 											{...params}
 											variant="outlined"
 											size="small"
 											fullWidth
-											sx={{ height: 40, minHeight: 40 }} // 🔹 Altura uniforme
+											sx={{ width: '300px' }}
 											InputProps={{
-												...params.InputProps,
-												sx: { height: 40, minHeight: 40, padding: "0 14px" } // 🔹 Ajuste interno
+												...params.InputProps
 											}}
 										/>
 									)}
