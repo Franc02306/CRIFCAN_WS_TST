@@ -1,12 +1,12 @@
 import { Grid } from '@mui/material'
 
-import NewsParams from '../../apps/phytosanitary-news/NewsParams'
+import PhitosanitaryParams from '../phytosanitary-news/PhitosanitaryParams'
 
 const PhitosanitaryNewsIndex = ({ }) => {
 	return (
 		<Grid container spacing={6}>
 			<Grid item xs={12}>
-				<NewsParams />
+				<PhitosanitaryParams />
 			</Grid>
 		</Grid>
 	)

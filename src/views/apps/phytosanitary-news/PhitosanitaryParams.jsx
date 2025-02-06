@@ -32,8 +32,8 @@ import {
 import Swal from 'sweetalert2'
 import { useTheme } from '@emotion/react'
 
-const NewsParams = ({  }) => {
+const PhitosanitaryParams = ({  }) => {
 
 }
 
-export default NewsParams
+export default PhitosanitaryParams
