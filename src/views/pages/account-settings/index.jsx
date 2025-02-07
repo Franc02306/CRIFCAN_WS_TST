@@ -54,7 +54,7 @@ const AccountSettings = ({ tabContentList }) => {
               }
               value='notifications'
             />
-            <Tab
+            {/* <Tab
               label={
                 <div className='flex items-center gap-1.5'>
                   <i className='tabler-lock text-lg' />
@@ -62,7 +62,7 @@ const AccountSettings = ({ tabContentList }) => {
                 </div>
               }
               value='security'
-            />
+            /> */}
             {/* <Tab
               label={
                 <div className='flex items-center gap-1.5'>
