@@ -8,6 +8,7 @@ import NavToggle from './NavToggle'
 import Logo from '@components/layout/shared/Logo'
 import ModeDropdown from '@components/layout/shared/ModeDropdown'
 import UserDropdown from '@components/layout/shared/UserDropdown'
+import NotificationsDropdown from '@components/layout/shared/NotificationsDropdown'
 
 // Hook Imports
 import useHorizontalNav from '@menu/hooks/useHorizontalNav'
@@ -118,6 +119,7 @@ const NavbarContent = () => {
       </div>
 
       <div className='flex items-center'>
+        <NotificationsDropdown />
         <ModeDropdown />
         <UserDropdown />
         {/* Language Dropdown, Notification Dropdown, quick access menu dropdown, user dropdown will be placed here */}
