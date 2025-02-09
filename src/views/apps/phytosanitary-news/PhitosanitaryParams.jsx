@@ -43,23 +43,27 @@ const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
 const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
-	const [selectedPlague, setSelectedPlague] = useState(null);
-	const [selectedDate, setSelectedDate] = useState(null);
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
-	const [snackbarMessage, setSnackbarMessage] = useState('');
-	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedPlague, setSelectedPlague] = useState(null)
+	const [selectedDate, setSelectedDate] = useState(null)
+	const [selectedCountry, setSelectedCountry] = useState("")
+	const [filteredData, setFilteredData] = useState([])
 
-	const handlePlagueChange = (event, newValue) => {
-		setSelectedPlague(newValue);
-	};
+	const handleSearch = () => {
+		const filtered = data.filter(item =>
+			(!selectedPlague || item.plague === selectedPlague) &&
+			(!selectedCountry || item.country === selectedCountry) &&
+			(!selectedDate || item.date === selectedDate.format('YYYY-MM-DD'))
+		)
 
-	const handleCloseSnackbar = () => {
-		setSnackbarOpen(false);
-	};
+		setFilteredData(filtered)
+	}
 
-	const handleCountryChange = (event) => {
-		setSelectedCountry(event.target.value);
-	};
+	const handleClear = () => {
+		setSelectedPlague(null)
+		setSelectedDate(null)
+		setSelectedCountry("")
+		setFilteredData([])
+	}
 
 	return (
 		<>
@@ -71,7 +75,7 @@ const PhitosanitaryParams = ({ data }) => {
 							<Autocomplete
 								options={plagueOptions}
 								value={selectedPlague}
-								onChange={handlePlagueChange}
+								onChange={(event, newValue) => setSelectedPlague(newValue)}
 								renderInput={(params) => (
 									<TextField
 										{...params}
@@ -99,7 +103,7 @@ const PhitosanitaryParams = ({ data }) => {
 								select
 								label="Seleccionar País"
 								value={selectedCountry}
-								onChange={handleCountryChange}
+								onChange={(event) => setSelectedCountry(event.target.value)}
 								variant="outlined"
 								size="small"
 								fullWidth
@@ -120,22 +124,24 @@ const PhitosanitaryParams = ({ data }) => {
 									label="Fecha de Notificación"
 									value={selectedDate}
 									onChange={(newValue) => setSelectedDate(newValue)}
-									size="small"
 									sx={{ width: '300px' }}
-									renderInput={(params) => (
-										<TextField
-											{...params}
-											variant="outlined"
-											size="small"
-											fullWidth
-											sx={{ width: '300px' }}
-											InputProps={{
-												...params.InputProps
-											}}
-										/>
-									)}
+									renderInput={(params) => <TextField {...params} variant="outlined" size="small" fullWidth />}
 								/>
 							</LocalizationProvider>
+						</Grid>
+
+						{/* Botón de Buscar */}
+						<Grid item xs={12} md="auto">
+							<Button variant="contained" color="primary" onClick={handleSearch}>
+								Buscar
+							</Button>
+						</Grid>
+
+						{/* Botón de Limpiar */}
+						<Grid item xs={12} md="auto">
+							<Button variant="outlined" color="secondary" onClick={handleClear}>
+								Limpiar Filtros
+							</Button>
 						</Grid>
 					</Grid>
 				</Box>
@@ -151,7 +157,14 @@ const PhitosanitaryParams = ({ data }) => {
 						</Typography>
 					</Grid>
 
-					<TableContainer sx={{ marginTop: 2, borderRadius: 1.5, overflow: 'hidden', overflowX: 'auto' }}>
+					<TableContainer
+						sx={{
+							marginTop: 2,
+							borderRadius: 1.5,
+							overflow: 'hidden',
+							overflowX: 'auto'
+						}}
+					>
 						<Table
 							sx={{
 								'& .MuiTableCell-root': {
@@ -180,8 +193,8 @@ const PhitosanitaryParams = ({ data }) => {
 							</TableHead>
 
 							<TableBody>
-								{data.length > 0 ? (
-									data.map((row, index) => (
+								{filteredData.length > 0 ? (
+									filteredData.map((row, index) => (
 										<TableRow key={index}>
 											<TableCell align='center'>{row.plague}</TableCell>
 											<TableCell align='center'>{row.country}</TableCell>
@@ -191,7 +204,7 @@ const PhitosanitaryParams = ({ data }) => {
 									))
 								) : (
 									<TableRow>
-										<TableCell colSpan={3} align="center">
+										<TableCell colSpan={4} align="center">
 											<Typography variant="body1" color="secondary">
 												No se encontraron registros.
 											</Typography>
@@ -202,26 +215,6 @@ const PhitosanitaryParams = ({ data }) => {
 						</Table>
 					</TableContainer>
 				</Box>
-
-				<Snackbar
-					open={snackbarOpen}
-					onClose={handleCloseSnackbar}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-				>
-					<Alert
-						onClose={handleCloseSnackbar}
-						severity='info'
-						sx={{
-							width: '100%',
-							backgroundColor: 'rgba(100, 200, 255, 0.8)',
-							color: '#000',
-							fontWeight: '600',
-							boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.9)'
-						}}
-					>
-						{snackbarMessage}
-					</Alert>
-				</Snackbar>
 			</Paper>
 		</>
 	);
