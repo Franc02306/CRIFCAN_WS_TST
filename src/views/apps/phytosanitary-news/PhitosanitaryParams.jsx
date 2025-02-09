@@ -40,7 +40,7 @@ import PestControlIcon from '@mui/icons-material/PestControl'
 const plagueOptions = ["Pulgón", "Gusano de la hoja", "Araña roja", "Langosta", "Trips", "Minador de hojas"];
 const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
 
-const PhitosanitaryParams = ({ }) => {
+const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
 	const [selectedPlague, setSelectedPlague] = useState(null);
@@ -151,14 +151,7 @@ const PhitosanitaryParams = ({ }) => {
 						</Typography>
 					</Grid>
 
-					<TableContainer
-						sx={{
-							marginTop: 2,
-							borderRadius: 1.5,
-							overflow: 'hidden',
-							overflowX: 'auto'
-						}}
-					>
+					<TableContainer sx={{ marginTop: 2, borderRadius: 1.5, overflow: 'hidden', overflowX: 'auto' }}>
 						<Table
 							sx={{
 								'& .MuiTableCell-root': {
@@ -171,47 +164,40 @@ const PhitosanitaryParams = ({ }) => {
 						>
 							<TableHead style={{ backgroundColor: theme.palette.primary.main }}>
 								<TableRow>
-									<TableCell
-										align='center'
-										sx={{
-											minWidth: '150px',
-											maxWidth: '300px',
-											wordBreak: 'break-word',
-											whiteSpace: 'normal',
-											color: theme.palette.primary.contrastText
-										}}
-									>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Plaga
 									</TableCell>
-									<TableCell
-										align='center'
-										sx={{
-											minWidth: '150px',
-											maxWidth: '80vh',
-											wordBreak: 'break-word',
-											whiteSpace: 'normal',
-											color: theme.palette.primary.contrastText
-										}}
-									>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										País
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Descripción
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Fecha de Notificación
 									</TableCell>
-									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Acciones
-									</TableCell>
 								</TableRow>
 							</TableHead>
 
 							<TableBody>
-								<TableRow>
-									<TableCell colSpan={4} align="center">
-										<Typography variant="body1" color="secondary">
-											No se encontraron registros.
-										</Typography>
-									</TableCell>
-								</TableRow>
+								{data.length > 0 ? (
+									data.map((row, index) => (
+										<TableRow key={index}>
+											<TableCell align='center'>{row.plague}</TableCell>
+											<TableCell align='center'>{row.country}</TableCell>
+											<TableCell align='center'>{row.description}</TableCell>
+											<TableCell align='center'>{row.date}</TableCell>
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell colSpan={3} align="center">
+											<Typography variant="body1" color="secondary">
+												No se encontraron registros.
+											</Typography>
+										</TableCell>
+									</TableRow>
+								)}
 							</TableBody>
 						</Table>
 					</TableContainer>
