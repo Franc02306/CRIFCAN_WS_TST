@@ -36,6 +36,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from "@mui/x-date-pickers";
 
 import PestControlIcon from '@mui/icons-material/PestControl'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
 const plagueOptions = ["Pulgón", "Gusano de la hoja", "Araña roja", "Langosta", "Trips", "Minador de hojas"];
 const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
@@ -130,18 +131,20 @@ const PhitosanitaryParams = ({ data }) => {
 							</LocalizationProvider>
 						</Grid>
 
-						{/* Botón de Buscar */}
-						<Grid item xs={12} md="auto">
+						{/* Botón de Buscar con espaciado adicional */}
+						<Grid item xs={12} md="auto" sx={{ marginRight: 3 }}>
 							<Button variant="contained" color="primary" onClick={handleSearch}>
 								Buscar
 							</Button>
 						</Grid>
 
-						{/* Botón de Limpiar */}
+						{/* Botón de Limpiar con icono y tooltip, con espaciado adicional */}
 						<Grid item xs={12} md="auto">
-							<Button variant="outlined" color="secondary" onClick={handleClear}>
-								Limpiar Filtros
-							</Button>
+							<Tooltip title="Limpiar filtros">
+								<Button variant="outlined" color="error" onClick={handleClear} sx={{ minWidth: '50px' }}>
+									<DeleteOutlineIcon />
+								</Button>
+							</Tooltip>
 						</Grid>
 					</Grid>
 				</Box>
@@ -206,7 +209,7 @@ const PhitosanitaryParams = ({ data }) => {
 									<TableRow>
 										<TableCell colSpan={4} align="center">
 											<Typography variant="body1" color="secondary">
-												No se encontraron registros.
+												Utilice los filtros disponibles para precisar su búsqueda
 											</Typography>
 										</TableCell>
 									</TableRow>
