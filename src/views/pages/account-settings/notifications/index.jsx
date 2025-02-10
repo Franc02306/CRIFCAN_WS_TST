@@ -10,6 +10,9 @@ import Checkbox from '@mui/material/Checkbox'
 import MenuItem from '@mui/material/MenuItem'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import Link from '@components/Link'
 import Form from '@components/Form'
@@ -26,6 +29,13 @@ const Notifications = () => {
     setSavedSearches(storedSearches)
   }, [])
 
+  const handleDelete = (id) => {
+    const updatedSearches = savedSearches.filter((search) => search.id !== id)
+
+    setSavedSearches(updatedSearches)
+    localStorage.setItem("savedSearches", JSON.stringify(updatedSearches))
+  }
+
   return (
     <Card>
       <CardHeader
@@ -37,6 +47,7 @@ const Notifications = () => {
         <table className={tableStyles.table}>
           <thead>
             <tr>
+              <th>Nombre de la Búsqueda</th>
               <th>Plaga</th>
               <th>País</th>
               <th>Fecha</th>
@@ -47,6 +58,9 @@ const Notifications = () => {
               savedSearches.map((search, index) => (
                 <tr key={search.id}>
                   <td>
+                    <Typography color='text.primary'>{search.name}</Typography>
+                  </td>
+                  <td>
                     <Typography color='text.primary'>{search.plague}</Typography>
                   </td>
                   <td>
@@ -55,11 +69,18 @@ const Notifications = () => {
                   <td>
                     <Typography color='text.primary'>{search.date}</Typography>
                   </td>
+                  <td>
+                    <Tooltip title='Borrar Búsqueda' arrow>
+                      <Button variant='outlined' color='error' onClick={() => handleDelete(search.id)}>
+                        <DeleteIcon />
+                      </Button>
+                    </Tooltip>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center', padding: '10px' }}>
+                <td colSpan={4} style={{ textAlign: 'center', padding: '10px' }}>
                   <Typography variant='body1' color='text.secondary'>
                     No hay búsquedas guardadas.
                   </Typography>

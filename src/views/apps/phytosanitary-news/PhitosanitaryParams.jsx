@@ -101,16 +101,13 @@ const PhitosanitaryParams = ({ data }) => {
 				style: `color: ${titleColor}; font-size: 16px; font-family: Arial, sans-serif;`
 			},
 			preConfirm: (inputValue) => {
-				if (!inputValue) {
-					return "Búsqueda sin nombre";
-				}
-				
-				return inputValue;
+				return inputValue ? inputValue : "Búsqueda sin nombre";
 			}
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const newSearch = {
 					id: Date.now(),
+					name: result.value, // Se almacena el nombre ingresado por el usuario
 					plague: selectedPlague || "Guardado sin Plaga",
 					country: selectedCountry || "Guardado sin País",
 					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
@@ -126,14 +123,14 @@ const PhitosanitaryParams = ({ data }) => {
 
 				Swal.fire({
 					html: `
-								<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
-										Guardado con éxito
-								</span>
-								<br>
-								<span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
-										Tu búsqueda ha sido guardada correctamente.
-								</span>
-						`,
+                    <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                        Guardado con éxito
+                    </span>
+                    <br>
+                    <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+                        Tu búsqueda ha sido guardada correctamente.
+                    </span>
+                `,
 					icon: "success",
 					confirmButtonText: "Aceptar",
 					confirmButtonColor: confirmButtonColor,
