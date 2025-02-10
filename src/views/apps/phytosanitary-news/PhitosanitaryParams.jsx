@@ -30,36 +30,110 @@ import {
 	Autocomplete
 } from '@mui/material'
 
+import Swal from 'sweetalert2'
+
 import { useTheme } from '@emotion/react'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from "@mui/x-date-pickers";
 
 import PestControlIcon from '@mui/icons-material/PestControl'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import SaveIcon from '@mui/icons-material/Save'
+import SearchIcon from '@mui/icons-material/Search';
 
 const plagueOptions = ["Pulgón", "Gusano de la hoja", "Araña roja", "Langosta", "Trips", "Minador de hojas"];
 const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
 
-const PhitosanitaryParams = ({ }) => {
+const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
-	const [selectedPlague, setSelectedPlague] = useState(null);
-	const [selectedDate, setSelectedDate] = useState(null);
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
-	const [snackbarMessage, setSnackbarMessage] = useState('');
-	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedPlague, setSelectedPlague] = useState(null)
+	const [selectedDate, setSelectedDate] = useState(null)
+	const [selectedCountry, setSelectedCountry] = useState("")
+	const [filteredData, setFilteredData] = useState([])
+	const [savedSearches, setSavedSearches] = useState([])
 
-	const handlePlagueChange = (event, newValue) => {
-		setSelectedPlague(newValue);
-	};
+	const handleSearch = () => {
+		const filtered = data.filter(item =>
+			(!selectedPlague || item.plague === selectedPlague) &&
+			(!selectedCountry || item.country === selectedCountry) &&
+			(!selectedDate || item.date === selectedDate.format('YYYY-MM-DD'))
+		)
 
-	const handleCloseSnackbar = () => {
-		setSnackbarOpen(false);
-	};
+		setFilteredData(filtered)
+	}
 
-	const handleCountryChange = (event) => {
-		setSelectedCountry(event.target.value);
-	};
+	const handleSaveSearch = () => {
+		if (!selectedPlague && !selectedCountry && !selectedDate) return
+
+		const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+		const backgroundColor = theme.palette.background.paper
+		const confirmButtonColor = theme.palette.primary.main
+		const cancelButtonColor = theme.palette.error.main
+
+		Swal.fire({
+			html: `
+        <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+            ¿Guardar esta búsqueda?
+        </span>
+        <br>
+        <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+            Podrás consultarla más tarde en la sección de 'Ajustes'.
+        </span>
+    `,
+			icon: "question",
+			showCancelButton: true,
+			confirmButtonText: "Sí, Guardar",
+			cancelButtonText: "Cancelar",
+			confirmButtonColor: confirmButtonColor,
+			cancelButtonColor: cancelButtonColor,
+			background: backgroundColor
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const newSearch = {
+					id: Date.now(),
+					plague: selectedPlague || "Guardado sin Plaga",
+					country: selectedCountry || "Guardado sin País",
+					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
+				};
+
+				setSavedSearches(prevSearches => {
+					const updatedSearches = [...prevSearches, newSearch];
+
+					console.log("Búsquedas guardadas:", updatedSearches); // LOG PARA PROBAR
+
+					return updatedSearches;
+				});
+
+				Swal.fire({
+					html: `
+								<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+										Guardado con éxito
+								</span>
+								<br>
+								<span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+										Tu búsqueda ha sido guardada correctamente.
+								</span>
+						`,
+					icon: "success",
+					confirmButtonText: "Aceptar",
+					confirmButtonColor: confirmButtonColor,
+					background: backgroundColor
+				});
+			}
+		})
+	}
+
+	// Esta variable verifica si hay filtros rellenados para habilitar el botón
+	const isSaveDisabled = !selectedPlague && !selectedCountry && !selectedDate
+
+	const handleClear = () => {
+		setSelectedPlague(null)
+		setSelectedDate(null)
+		setSelectedCountry("")
+		setFilteredData([])
+	}
 
 	return (
 		<>
@@ -71,7 +145,7 @@ const PhitosanitaryParams = ({ }) => {
 							<Autocomplete
 								options={plagueOptions}
 								value={selectedPlague}
-								onChange={handlePlagueChange}
+								onChange={(event, newValue) => setSelectedPlague(newValue)}
 								renderInput={(params) => (
 									<TextField
 										{...params}
@@ -99,7 +173,7 @@ const PhitosanitaryParams = ({ }) => {
 								select
 								label="Seleccionar País"
 								value={selectedCountry}
-								onChange={handleCountryChange}
+								onChange={(event) => setSelectedCountry(event.target.value)}
 								variant="outlined"
 								size="small"
 								fullWidth
@@ -120,22 +194,39 @@ const PhitosanitaryParams = ({ }) => {
 									label="Fecha de Notificación"
 									value={selectedDate}
 									onChange={(newValue) => setSelectedDate(newValue)}
-									size="small"
 									sx={{ width: '300px' }}
-									renderInput={(params) => (
-										<TextField
-											{...params}
-											variant="outlined"
-											size="small"
-											fullWidth
-											sx={{ width: '300px' }}
-											InputProps={{
-												...params.InputProps
-											}}
-										/>
-									)}
+									renderInput={(params) => <TextField {...params} variant="outlined" size="small" fullWidth />}
 								/>
 							</LocalizationProvider>
+						</Grid>
+
+						{/* Botón de Buscar con espaciado adicional */}
+						<Grid item xs={12} md="auto" sx={{ marginRight: 3 }}>
+							<Button variant="contained" color="primary" onClick={handleSearch} startIcon={<SearchIcon />}>
+								Buscar
+							</Button>
+						</Grid>
+
+						{/* Botón de Guardar Búsqueda */}
+						<Grid item sx={{ marginRight: 3 }}>
+							<Button
+								variant="contained"
+								color="success"
+								onClick={handleSaveSearch}
+								startIcon={<SaveIcon />}
+								disabled={isSaveDisabled}
+							>
+								Guardar Búsqueda
+							</Button>
+						</Grid>
+
+						{/* Botón de Limpiar con icono y tooltip, con espaciado adicional */}
+						<Grid item xs={12} md="auto">
+							<Tooltip title="Limpiar filtros">
+								<Button variant="outlined" color="error" onClick={handleClear} sx={{ minWidth: '50px' }}>
+									<DeleteOutlineIcon />
+								</Button>
+							</Tooltip>
 						</Grid>
 					</Grid>
 				</Box>
@@ -171,71 +262,44 @@ const PhitosanitaryParams = ({ }) => {
 						>
 							<TableHead style={{ backgroundColor: theme.palette.primary.main }}>
 								<TableRow>
-									<TableCell
-										align='center'
-										sx={{
-											minWidth: '150px',
-											maxWidth: '300px',
-											wordBreak: 'break-word',
-											whiteSpace: 'normal',
-											color: theme.palette.primary.contrastText
-										}}
-									>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Plaga
 									</TableCell>
-									<TableCell
-										align='center'
-										sx={{
-											minWidth: '150px',
-											maxWidth: '80vh',
-											wordBreak: 'break-word',
-											whiteSpace: 'normal',
-											color: theme.palette.primary.contrastText
-										}}
-									>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										País
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Descripción
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Fecha de Notificación
 									</TableCell>
-									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Acciones
-									</TableCell>
 								</TableRow>
 							</TableHead>
 
 							<TableBody>
-								<TableRow>
-									<TableCell colSpan={4} align="center">
-										<Typography variant="body1" color="secondary">
-											No se encontraron registros.
-										</Typography>
-									</TableCell>
-								</TableRow>
+								{filteredData.length > 0 ? (
+									filteredData.map((row, index) => (
+										<TableRow key={index}>
+											<TableCell align='center'>{row.plague}</TableCell>
+											<TableCell align='center'>{row.country}</TableCell>
+											<TableCell align='center'>{row.description}</TableCell>
+											<TableCell align='center'>{row.date}</TableCell>
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell colSpan={4} align="center">
+											<Typography variant="body1" color="secondary">
+												Utilice los filtros disponibles para precisar su búsqueda
+											</Typography>
+										</TableCell>
+									</TableRow>
+								)}
 							</TableBody>
 						</Table>
 					</TableContainer>
 				</Box>
-
-				<Snackbar
-					open={snackbarOpen}
-					onClose={handleCloseSnackbar}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-				>
-					<Alert
-						onClose={handleCloseSnackbar}
-						severity='info'
-						sx={{
-							width: '100%',
-							backgroundColor: 'rgba(100, 200, 255, 0.8)',
-							color: '#000',
-							fontWeight: '600',
-							boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.9)'
-						}}
-					>
-						{snackbarMessage}
-					</Alert>
-				</Snackbar>
 			</Paper>
 		</>
 	);
