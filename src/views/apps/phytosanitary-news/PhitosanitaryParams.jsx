@@ -93,16 +93,16 @@ const PhitosanitaryParams = ({ data }) => {
 			if (result.isConfirmed) {
 				const newSearch = {
 					id: Date.now(),
-					plague: selectedPlague || "Guardado sin Plaga",
-					country: selectedCountry || "Guardado sin País",
-					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
+					plague: selectedPlague || "Cualquier Plaga",
+					country: selectedCountry || "Cualquier País",
+					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Cualquier Fecha"
 				};
 
 				setSavedSearches(prevSearches => {
 					const updatedSearches = [...prevSearches, newSearch];
 
-					console.log("Búsquedas guardadas:", updatedSearches); // LOG PARA PROBAR
-
+					localStorage.setItem("savedSearches", JSON.stringify(updatedSearches)); // Guardar en localStorage
+					
 					return updatedSearches;
 				});
 
