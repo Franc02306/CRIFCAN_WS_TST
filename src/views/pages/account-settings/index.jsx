@@ -49,7 +49,7 @@ const AccountSettings = ({ tabContentList }) => {
               label={
                 <div className='flex items-center gap-1.5'>
                   <i className='tabler-bell text-lg' />
-                  Notificaciones
+                  Búsquedas Guardadas
                 </div>
               }
               value='notifications'

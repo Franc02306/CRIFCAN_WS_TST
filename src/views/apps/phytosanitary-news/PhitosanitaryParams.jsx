@@ -56,7 +56,7 @@ const PhitosanitaryParams = ({ data }) => {
 
 	useEffect(() => {
 		const storedSearches = JSON.parse(localStorage.getItem("savedSearches")) || []
-		
+
 		setSavedSearches(storedSearches)
 	}, [])
 
@@ -80,28 +80,40 @@ const PhitosanitaryParams = ({ data }) => {
 
 		Swal.fire({
 			html: `
-        <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
-            ¿Guardar esta búsqueda?
-        </span>
-        <br>
-        <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
-            Podrás consultarla más tarde en la sección de 'Ajustes'.
-        </span>
-    `,
+					<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+							¿Guardar esta búsqueda?
+					</span>
+					<br>
+					<span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+							Podrás consultarla más tarde en la sección de 'Ajustes'.
+					</span>
+			`,
+			input: "text",
+			inputPlaceholder: "Ingrese un nombre para la búsqueda",
 			icon: "question",
 			showCancelButton: true,
 			confirmButtonText: "Sí, Guardar",
 			cancelButtonText: "Cancelar",
 			confirmButtonColor: confirmButtonColor,
 			cancelButtonColor: cancelButtonColor,
-			background: backgroundColor
+			background: backgroundColor,
+			inputAttributes: {
+				style: `color: ${titleColor}; font-size: 16px; font-family: Arial, sans-serif;`
+			},
+			preConfirm: (inputValue) => {
+				if (!inputValue) {
+					return "Búsqueda sin nombre";
+				}
+				
+				return inputValue;
+			}
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const newSearch = {
 					id: Date.now(),
-					plague: selectedPlague || "Cualquier Plaga",
-					country: selectedCountry || "Cualquier País",
-					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Cualquier Fecha"
+					plague: selectedPlague || "Guardado sin Plaga",
+					country: selectedCountry || "Guardado sin País",
+					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
 				};
 
 				setSavedSearches(prevSearches => {
