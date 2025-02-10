@@ -54,6 +54,12 @@ const PhitosanitaryParams = ({ data }) => {
 	const [filteredData, setFilteredData] = useState([])
 	const [savedSearches, setSavedSearches] = useState([])
 
+	useEffect(() => {
+		const storedSearches = JSON.parse(localStorage.getItem("savedSearches")) || []
+		
+		setSavedSearches(storedSearches)
+	}, [])
+
 	const handleSearch = () => {
 		const filtered = data.filter(item =>
 			(!selectedPlague || item.plague === selectedPlague) &&
@@ -102,7 +108,7 @@ const PhitosanitaryParams = ({ data }) => {
 					const updatedSearches = [...prevSearches, newSearch];
 
 					localStorage.setItem("savedSearches", JSON.stringify(updatedSearches)); // Guardar en localStorage
-					
+
 					return updatedSearches;
 				});
 
