@@ -21,28 +21,19 @@ import tableStyles from '@core/styles/table.module.css'
 // Vars
 const tableData = [
   {
-    app: false,
     email: true,
     browser: false,
-    type: 'New for you'
+    type: 'Plaga'
   },
   {
-    app: false,
     email: false,
     browser: true,
-    type: 'Account activity'
+    type: 'Descubrimiento'
   },
   {
-    app: true,
     email: false,
     browser: false,
-    type: 'A new browser used to sign in'
-  },
-  {
-    app: false,
-    email: false,
-    browser: true,
-    type: 'A new device is linked'
+    type: 'Ambiente'
   }
 ]
 
@@ -50,11 +41,11 @@ const Notifications = () => {
   return (
     <Card>
       <CardHeader
-        title='Recent Devices'
+        title='Configuración de Notificaciones'
         subheader={
           <>
-            We need permission from your browser to show notifications.
-            <Link className='text-primary'> Request Permission</Link>
+            Personaliza tus notificaciones aquí
+            {/* <Link className='text-primary'> Request Permission</Link> */}
           </>
         }
       />
@@ -63,10 +54,9 @@ const Notifications = () => {
           <table className={tableStyles.table}>
             <thead>
               <tr>
-                <th>Type</th>
-                <th>Email</th>
-                <th>Browser</th>
-                <th>App</th>
+                <th>Tipo</th>
+                <th>Correo</th>
+                <th>Navegador</th>
               </tr>
             </thead>
             <tbody className='border-be'>
@@ -81,29 +71,26 @@ const Notifications = () => {
                   <td>
                     <Checkbox defaultChecked={data.browser} />
                   </td>
-                  <td>
-                    <Checkbox defaultChecked={data.app} />
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <CardContent>
-          <Typography className='mbe-6 font-medium'>When should we send you notifications?</Typography>
+          {/* <Typography className='mbe-6 font-medium'>When should we send you notifications?</Typography> */}
           <Grid container spacing={6}>
-            <Grid item xs={12} sm={6} md={4}>
+            {/* <Grid item xs={12} sm={6} md={4}>
               <CustomTextField select fullWidth defaultValue='online'>
                 <MenuItem value='online'>Only when I&#39;m online</MenuItem>
                 <MenuItem value='anytime'>Anytime</MenuItem>
               </CustomTextField>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} className='flex gap-4 flex-wrap'>
               <Button variant='contained' type='submit'>
-                Save Changes
+                Guardar
               </Button>
-              <Button variant='tonal' color='secondary' type='reset'>
-                Discard
+              <Button variant='outlined' color='error' type='reset'>
+                Descartar
               </Button>
             </Grid>
           </Grid>
