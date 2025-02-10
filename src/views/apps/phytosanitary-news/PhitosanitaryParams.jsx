@@ -30,6 +30,8 @@ import {
 	Autocomplete
 } from '@mui/material'
 
+import Swal from 'sweetalert2'
+
 import { useTheme } from '@emotion/react'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -37,6 +39,8 @@ import { DatePicker } from "@mui/x-date-pickers";
 
 import PestControlIcon from '@mui/icons-material/PestControl'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import SaveIcon from '@mui/icons-material/Save'
+import SearchIcon from '@mui/icons-material/Search';
 
 const plagueOptions = ["Pulgón", "Gusano de la hoja", "Araña roja", "Langosta", "Trips", "Minador de hojas"];
 const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
@@ -48,6 +52,7 @@ const PhitosanitaryParams = ({ data }) => {
 	const [selectedDate, setSelectedDate] = useState(null)
 	const [selectedCountry, setSelectedCountry] = useState("")
 	const [filteredData, setFilteredData] = useState([])
+	const [savedSearches, setSavedSearches] = useState([])
 
 	const handleSearch = () => {
 		const filtered = data.filter(item =>
@@ -58,6 +63,70 @@ const PhitosanitaryParams = ({ data }) => {
 
 		setFilteredData(filtered)
 	}
+
+	const handleSaveSearch = () => {
+		if (!selectedPlague && !selectedCountry && !selectedDate) return
+
+		const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+		const backgroundColor = theme.palette.background.paper
+		const confirmButtonColor = theme.palette.primary.main
+		const cancelButtonColor = theme.palette.error.main
+
+		Swal.fire({
+			html: `
+        <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+            ¿Guardar esta búsqueda?
+        </span>
+        <br>
+        <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+            Podrás consultarla más tarde en la sección de 'Ajustes'.
+        </span>
+    `,
+			icon: "question",
+			showCancelButton: true,
+			confirmButtonText: "Sí, Guardar",
+			cancelButtonText: "Cancelar",
+			confirmButtonColor: confirmButtonColor,
+			cancelButtonColor: cancelButtonColor,
+			background: backgroundColor
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const newSearch = {
+					id: Date.now(),
+					plague: selectedPlague || "Guardado sin Plaga",
+					country: selectedCountry || "Guardado sin País",
+					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
+				};
+
+				setSavedSearches(prevSearches => {
+					const updatedSearches = [...prevSearches, newSearch];
+
+					console.log("Búsquedas guardadas:", updatedSearches); // LOG PARA PROBAR
+
+					return updatedSearches;
+				});
+
+				Swal.fire({
+					html: `
+								<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+										Guardado con éxito
+								</span>
+								<br>
+								<span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+										Tu búsqueda ha sido guardada correctamente.
+								</span>
+						`,
+					icon: "success",
+					confirmButtonText: "Aceptar",
+					confirmButtonColor: confirmButtonColor,
+					background: backgroundColor
+				});
+			}
+		})
+	}
+
+	// Esta variable verifica si hay filtros rellenados para habilitar el botón
+	const isSaveDisabled = !selectedPlague && !selectedCountry && !selectedDate
 
 	const handleClear = () => {
 		setSelectedPlague(null)
@@ -133,8 +202,21 @@ const PhitosanitaryParams = ({ data }) => {
 
 						{/* Botón de Buscar con espaciado adicional */}
 						<Grid item xs={12} md="auto" sx={{ marginRight: 3 }}>
-							<Button variant="contained" color="primary" onClick={handleSearch}>
+							<Button variant="contained" color="primary" onClick={handleSearch} startIcon={<SearchIcon />}>
 								Buscar
+							</Button>
+						</Grid>
+
+						{/* Botón de Guardar Búsqueda */}
+						<Grid item sx={{ marginRight: 3 }}>
+							<Button
+								variant="contained"
+								color="success"
+								onClick={handleSaveSearch}
+								startIcon={<SaveIcon />}
+								disabled={isSaveDisabled}
+							>
+								Guardar Búsqueda
 							</Button>
 						</Grid>
 
