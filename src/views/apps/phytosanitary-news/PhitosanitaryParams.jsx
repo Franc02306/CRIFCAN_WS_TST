@@ -38,6 +38,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from "@mui/x-date-pickers";
 
 import PestControlIcon from '@mui/icons-material/PestControl'
+import PublicIcon from '@mui/icons-material/Public';
+import GrassTwoToneIcon from '@mui/icons-material/GrassTwoTone';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import SaveIcon from '@mui/icons-material/Save'
 import SearchIcon from '@mui/icons-material/Search';
@@ -157,62 +159,62 @@ const PhitosanitaryParams = ({ data }) => {
 					<Grid container spacing={1} alignItems='center' sx={{ marginBottom: 2 }}>
 						{/* Filtro por plaga */}
 						<Grid item xs={12} md>
-							<Autocomplete
-								options={plagueOptions}
+							<TextField
+								label="Buscar por Nombre Científico"
+								variant="outlined"
+								size="small"
+								autoComplete="off"
 								value={selectedPlague}
-								onChange={(event, newValue) => setSelectedPlague(newValue)}
-								renderInput={(params) => (
-									<TextField
-										{...params}
-										label="Buscar por Plaga"
-										variant="outlined"
-										size="small"
-										autoComplete="off"
-										InputProps={{
-											...params.InputProps,
-											startAdornment: (
-												<InputAdornment position="start">
-													<PestControlIcon />
-												</InputAdornment>
-											),
-										}}
-										style={{ marginRight: '5px', width: '300px' }}
-									/>
-								)}
+								onChange={(e) => setSelectedPlague(e.target.value)}
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<PestControlIcon />
+										</InputAdornment>
+									),
+								}}
+								style={{ marginRight: '5px', width: '300px' }}
 							/>
 						</Grid>
 
 						{/* Selección de País */}
 						<Grid item xs={12} md>
 							<TextField
-								select
-								label="Seleccionar País"
-								value={selectedCountry}
-								onChange={(event) => setSelectedCountry(event.target.value)}
+								label="Buscar por País"
 								variant="outlined"
 								size="small"
+								value={selectedCountry}
+								onChange={(e) => setSelectedCountry(e.target.value)}
 								fullWidth
-								sx={{ width: '300px' }}
-							>
-								{countryOptions.map((country) => (
-									<MenuItem key={country} value={country}>
-										{country}
-									</MenuItem>
-								))}
-							</TextField>
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<PublicIcon />
+										</InputAdornment>
+									),
+								}}
+								style={{ marginRight: '5px', width: '300px' }}
+							/>
 						</Grid>
 
-						{/* Filtro por fecha */}
+						{/* Filtro por Hospedante */}
 						<Grid item xs={12} md={6}>
-							<LocalizationProvider dateAdapter={AdapterDayjs}>
-								<DatePicker
-									label="Fecha de Notificación"
-									value={selectedDate}
-									onChange={(newValue) => setSelectedDate(newValue)}
-									sx={{ width: '300px' }}
-									renderInput={(params) => <TextField {...params} variant="outlined" size="small" fullWidth />}
-								/>
-							</LocalizationProvider>
+							<TextField
+								label="Buscar por Hospedante"
+								variant="outlined"
+								size="small"
+								value={selectedCountry}
+								onChange={(e) => setSelectedCountry(e.target.value)}
+								fullWidth
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<GrassTwoToneIcon />
+										</InputAdornment>
+									),
+								}}
+								style={{ marginRight: '5px', width: '300px' }}
+							/>
 						</Grid>
 
 						{/* Botón de Buscar con espaciado adicional */}
@@ -278,16 +280,55 @@ const PhitosanitaryParams = ({ data }) => {
 							<TableHead style={{ backgroundColor: theme.palette.primary.main }}>
 								<TableRow>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Plaga
+										Nombre Científico
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										País
+										Nombres Comunes
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Descripción
+										Sinónimos
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Fecha de Notificación
+										Descripción Invasiva
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Distribución
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Impacto
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Hábitat
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Ciclo Vital
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Reproducción
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Hospedante
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Síntomas
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Órganos Afectados
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Condiciones Ambientales
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Control Preventivo
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Usos
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Url Fuente
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Fuente Scraper
 									</TableCell>
 								</TableRow>
 							</TableHead>
@@ -296,15 +337,15 @@ const PhitosanitaryParams = ({ data }) => {
 								{filteredData.length > 0 ? (
 									filteredData.map((row, index) => (
 										<TableRow key={index}>
-											<TableCell align='center'>{row.plague}</TableCell>
+											{/* <TableCell align='center'>{row.plague}</TableCell>
 											<TableCell align='center'>{row.country}</TableCell>
 											<TableCell align='center'>{row.description}</TableCell>
-											<TableCell align='center'>{row.date}</TableCell>
+											<TableCell align='center'>{row.date}</TableCell> */}
 										</TableRow>
 									))
 								) : (
 									<TableRow>
-										<TableCell colSpan={4} align="center">
+										<TableCell colSpan={17} align="center">
 											<Typography variant="body1" color="secondary">
 												Utilice los filtros disponibles para precisar su búsqueda
 											</Typography>
