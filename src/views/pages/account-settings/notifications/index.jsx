@@ -82,7 +82,7 @@ const Notifications = () => {
               <tr>
                 <td colSpan={4} style={{ textAlign: 'center', padding: '10px' }}>
                   <Typography variant='body1' color='text.secondary'>
-                    No hay búsquedas guardadas.
+                    No hayapi/swagger/ búsquedas guardadas.
                   </Typography>
                 </td>
               </tr>
@@ -93,14 +93,14 @@ const Notifications = () => {
 
       <CardContent>
         <Grid container spacing={6}>
-          <Grid item xs={12} className='flex gap-4 flex-wrap'>
+          {/* <Grid item xs={12} className='flex gap-4 flex-wrap'>
             <Button variant='contained' type='submit'>
               Guardar Cambios
             </Button>
             <Button variant='outlined' color='error' type='reset'>
               Descartar
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </CardContent>
     </Card>
