@@ -94,9 +94,9 @@
   },
   "devDependencies": {
     "@iconify/iconify": "^3.1.1",
-    "@iconify/json": "^2.2.295",
+    "@iconify/json": "^2.2.306",
     "@iconify/tools": "^4.1.1",
-    "@iconify/utils": "^2.2.1",
+    "@iconify/utils": "^2.3.0",
     "@types/diff": "^5.2.2",
     "@types/file-saver": "^2.0.7",
     "@types/jsonwebtoken": "^9.0.6",

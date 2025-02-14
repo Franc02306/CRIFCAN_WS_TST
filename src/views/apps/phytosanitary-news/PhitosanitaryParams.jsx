@@ -53,22 +53,21 @@ const PhitosanitaryParams = ({ data }) => {
 	const [selectedPlague, setSelectedPlague] = useState(null)
 	const [selectedDate, setSelectedDate] = useState(null)
 	const [selectedCountry, setSelectedCountry] = useState("")
-	const [filteredData, setFilteredData] = useState([])
+	const [filteredData, setFilteredData] = useState(data || [])
 	const [savedSearches, setSavedSearches] = useState([])
 
 	useEffect(() => {
-		const storedSearches = JSON.parse(localStorage.getItem("savedSearches")) || []
-
-		setSavedSearches(storedSearches)
-	}, [])
+		setFilteredData(data)
+	}, [data])
 
 	const handleSearch = () => {
-		const filtered = data.filter(item =>
-			(!selectedPlague || item.plague === selectedPlague) &&
-			(!selectedCountry || item.country === selectedCountry) &&
-			(!selectedDate || item.date === selectedDate.format('YYYY-MM-DD'))
-		)
-
+		const filtered = data.filter(item => {
+			const matchesPlague = !selectedPlague ||
+				item.scientific_name?.toLowerCase().includes(selectedPlague.toLowerCase())
+			const matchesCountry = !selectedCountry ||
+				item.distribution?.toLowerCase().includes(selectedCountry.toLowerCase())
+			return matchesPlague && matchesCountry
+		})
 		setFilteredData(filtered)
 	}
 
@@ -149,7 +148,7 @@ const PhitosanitaryParams = ({ data }) => {
 		setSelectedPlague(null)
 		setSelectedDate(null)
 		setSelectedCountry("")
-		setFilteredData([])
+		setFilteredData(data)
 	}
 
 	return (
@@ -159,41 +158,49 @@ const PhitosanitaryParams = ({ data }) => {
 					<Grid container spacing={1} alignItems='center' sx={{ marginBottom: 2 }}>
 						{/* Filtro por plaga */}
 						<Grid item xs={12} md>
-							<TextField
-								label="Buscar por Nombre Científico"
-								variant="outlined"
-								size="small"
-								autoComplete="off"
+							<Autocomplete
+								options={[...new Set(data.map(item => item.scientific_name))]}
 								value={selectedPlague}
-								onChange={(e) => setSelectedPlague(e.target.value)}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<PestControlIcon />
-										</InputAdornment>
-									),
-								}}
-								style={{ marginRight: '5px', width: '300px' }}
+								onChange={(_, newValue) => setSelectedPlague(newValue)}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Buscar por Nombre Científico"
+										InputProps={{
+											...params.InputProps,
+											startAdornment: (
+												<InputAdornment position="start">
+													<PestControlIcon />
+												</InputAdornment>
+											)
+										}}
+										style={{ marginRight: '5px', width: '300px' }}
+									/>
+								)}
 							/>
 						</Grid>
 
 						{/* Selección de País */}
 						<Grid item xs={12} md>
-							<TextField
-								label="Buscar por País"
-								variant="outlined"
-								size="small"
+							<Autocomplete
+								options={[...new Set(data.map(item => item.distribution))]}
 								value={selectedCountry}
-								onChange={(e) => setSelectedCountry(e.target.value)}
-								fullWidth
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<PublicIcon />
-										</InputAdornment>
-									),
-								}}
-								style={{ marginRight: '5px', width: '300px' }}
+								onChange={(_, newValue) => setSelectedCountry(newValue)}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Buscar por Distribución"
+										InputProps={{
+											...params.InputProps,
+											startAdornment: (
+												<InputAdornment position="start">
+													<PublicIcon />
+												</InputAdornment>
+											)
+										}}
+										style={{ marginRight: '5px', width: '300px' }}
+									/>
+								)}
 							/>
 						</Grid>
 
@@ -255,7 +262,7 @@ const PhitosanitaryParams = ({ data }) => {
 				<Box sx={{ padding: 5 }}>
 					<Grid container spacing={2} alignItems='center' sx={{ marginBottom: 2 }}>
 						<Typography variant='h5' sx={{ fontWeight: 'bold', marginLeft: '12px', marginBottom: '10px' }}>
-							Parámetros Fitosanitarios
+							Búsqueda Fitosanitaria
 						</Typography>
 					</Grid>
 
@@ -334,20 +341,45 @@ const PhitosanitaryParams = ({ data }) => {
 							</TableHead>
 
 							<TableBody>
-								{filteredData.length > 0 ? (
+								{filteredData && filteredData.length > 0 ? (
 									filteredData.map((row, index) => (
 										<TableRow key={index}>
-											{/* <TableCell align='center'>{row.plague}</TableCell>
-											<TableCell align='center'>{row.country}</TableCell>
-											<TableCell align='center'>{row.description}</TableCell>
-											<TableCell align='center'>{row.date}</TableCell> */}
+											<TableCell align='center'>{row.scientific_name}</TableCell>
+											<TableCell align='center'>{row.common_names}</TableCell>
+											<TableCell align='center'>{row.synonyms}</TableCell>
+											<TableCell align='center'>{row.invasiveness_description}</TableCell>
+											<TableCell align='center'>{row.distribution}</TableCell>
+											<TableCell align='center'>
+												{row.impact && Object.entries(row.impact).map(([key, value]) => (
+													<div key={key}>{`${key}: ${value}`}</div>
+												))}
+											</TableCell>
+											<TableCell align='center'>{row.habitat}</TableCell>
+											<TableCell align='center'>{row.life_cycle}</TableCell>
+											<TableCell align='center'>{row.reproduction}</TableCell>
+											<TableCell align='center'>{row.hosts}</TableCell>
+											<TableCell align='center'>{row.symptoms}</TableCell>
+											<TableCell align='center'>{row.affected_organs}</TableCell>
+											<TableCell align='center'>{row.environmental_conditions}</TableCell>
+											<TableCell align='center'>
+												{row.prevention_control && Object.entries(row.prevention_control).map(([key, value]) => (
+													<div key={key}>{`${key}: ${value}`}</div>
+												))}
+											</TableCell>
+											<TableCell align='center'>{row.uses}</TableCell>
+											<TableCell align='center'>
+												<a href={row.source_url} target="_blank" rel="noreferrer">
+													Enlace
+												</a>
+											</TableCell>
+											<TableCell align='center'>{row.scraper_source}</TableCell>
 										</TableRow>
 									))
 								) : (
 									<TableRow>
 										<TableCell colSpan={17} align="center">
 											<Typography variant="body1" color="secondary">
-												Utilice los filtros disponibles para precisar su búsqueda
+												{data?.length === 0 ? 'No hay datos disponibles' : 'No se encontraron resultados'}
 											</Typography>
 										</TableCell>
 									</TableRow>
