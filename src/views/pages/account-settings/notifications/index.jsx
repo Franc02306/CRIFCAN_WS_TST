@@ -48,9 +48,9 @@ const Notifications = () => {
           <thead>
             <tr>
               <th>Nombre de la Búsqueda</th>
-              <th>Plaga</th>
-              <th>País</th>
-              <th>Fecha</th>
+              <th>Nombre Científico</th>
+              <th>Distribución</th>
+              <th>Hospedante</th>
             </tr>
           </thead>
           <tbody className='border-be'>
@@ -67,7 +67,7 @@ const Notifications = () => {
                     <Typography color='text.primary'>{search.country}</Typography>
                   </td>
                   <td>
-                    <Typography color='text.primary'>{search.date}</Typography>
+                    <Typography color='text.primary'>{search.hosts}</Typography>
                   </td>
                   <td>
                     <Tooltip title='Borrar Búsqueda' arrow>

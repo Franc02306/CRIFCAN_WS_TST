@@ -108,8 +108,8 @@ const PhitosanitaryParams = ({ data }) => {
 				const newSearch = {
 					id: Date.now(),
 					name: result.value, // Se almacena el nombre ingresado por el usuario
-					plague: selectedPlague || "Guardado sin Plaga",
-					country: selectedCountry || "Guardado sin País",
+					plague: selectedPlague || "Guardado sin Nombre Científico",
+					country: selectedCountry || "Guardado sin Distribución",
 					hosts: selectedHospedant || "Guardado sin Hospedante"
 				};
 
