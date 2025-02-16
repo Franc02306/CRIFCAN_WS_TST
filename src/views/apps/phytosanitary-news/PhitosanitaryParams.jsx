@@ -44,9 +44,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import SaveIcon from '@mui/icons-material/Save'
 import SearchIcon from '@mui/icons-material/Search';
 
-const plagueOptions = ["Pulgón", "Gusano de la hoja", "Araña roja", "Langosta", "Trips", "Minador de hojas"];
-const countryOptions = ["Bolivia", "Colombia", "Ecuador", "Perú"];
-
 const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
@@ -159,6 +156,7 @@ const PhitosanitaryParams = ({ data }) => {
 						{/* Filtro por plaga */}
 						<Grid item xs={12} md>
 							<Autocomplete
+								size="small"
 								options={[...new Set(data.map(item => item.scientific_name))]}
 								value={selectedPlague}
 								onChange={(_, newValue) => setSelectedPlague(newValue)}
@@ -174,15 +172,16 @@ const PhitosanitaryParams = ({ data }) => {
 												</InputAdornment>
 											)
 										}}
-										style={{ marginRight: '5px', width: '300px' }}
 									/>
 								)}
+								style={{ marginRight: '5px', width: '300px' }}
 							/>
 						</Grid>
 
 						{/* Selección de País */}
 						<Grid item xs={12} md>
 							<Autocomplete
+								size="small"
 								options={[...new Set(data.map(item => item.distribution))]}
 								value={selectedCountry}
 								onChange={(_, newValue) => setSelectedCountry(newValue)}
@@ -198,9 +197,9 @@ const PhitosanitaryParams = ({ data }) => {
 												</InputAdornment>
 											)
 										}}
-										style={{ marginRight: '5px', width: '300px' }}
 									/>
 								)}
+								style={{ marginRight: '5px', width: '300px' }}
 							/>
 						</Grid>
 
