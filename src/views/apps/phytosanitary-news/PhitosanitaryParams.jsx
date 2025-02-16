@@ -48,8 +48,8 @@ const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
 	const [selectedPlague, setSelectedPlague] = useState(null)
-	const [selectedDate, setSelectedDate] = useState(null)
-	const [selectedCountry, setSelectedCountry] = useState("")
+	const [selectedCountry, setSelectedCountry] = useState(null)
+	const [selectedHospedant, setSelectedHospedant] = useState(null)
 	const [filteredData, setFilteredData] = useState(data || [])
 	const [savedSearches, setSavedSearches] = useState([])
 
@@ -63,13 +63,15 @@ const PhitosanitaryParams = ({ data }) => {
 				item.scientific_name?.toLowerCase().includes(selectedPlague.toLowerCase())
 			const matchesCountry = !selectedCountry ||
 				item.distribution?.toLowerCase().includes(selectedCountry.toLowerCase())
-			return matchesPlague && matchesCountry
+			const matchesHospedant = !selectedHospedant ||
+				item.hosts?.toLowerCase().includes(selectedHospedant.toLowerCase())
+			return matchesPlague && matchesCountry && matchesHospedant
 		})
 		setFilteredData(filtered)
 	}
 
 	const handleSaveSearch = () => {
-		if (!selectedPlague && !selectedCountry && !selectedDate) return
+		if (!selectedPlague && !selectedCountry && !selectedHospedant) return
 
 		const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
 		const backgroundColor = theme.palette.background.paper
@@ -108,7 +110,7 @@ const PhitosanitaryParams = ({ data }) => {
 					name: result.value, // Se almacena el nombre ingresado por el usuario
 					plague: selectedPlague || "Guardado sin Plaga",
 					country: selectedCountry || "Guardado sin País",
-					date: selectedDate ? selectedDate.format('YYYY-MM-DD') : "Guardado sin Fecha"
+					hosts: selectedHospedant || "Guardado sin Hospedante"
 				};
 
 				setSavedSearches(prevSearches => {
@@ -139,12 +141,12 @@ const PhitosanitaryParams = ({ data }) => {
 	}
 
 	// Esta variable verifica si hay filtros rellenados para habilitar el botón
-	const isSaveDisabled = !selectedPlague && !selectedCountry && !selectedDate
+	const isSaveDisabled = !selectedPlague && !selectedCountry && !selectedHospedant
 
 	const handleClear = () => {
 		setSelectedPlague(null)
-		setSelectedDate(null)
-		setSelectedCountry("")
+		setSelectedCountry(null)
+		setSelectedHospedant(null)
 		setFilteredData(data)
 	}
 
@@ -160,6 +162,7 @@ const PhitosanitaryParams = ({ data }) => {
 								options={[...new Set(data.map(item => item.scientific_name))]}
 								value={selectedPlague}
 								onChange={(_, newValue) => setSelectedPlague(newValue)}
+								noOptionsText="Sin resultados"
 								renderInput={(params) => (
 									<TextField
 										{...params}
@@ -181,6 +184,7 @@ const PhitosanitaryParams = ({ data }) => {
 						{/* Selección de País */}
 						<Grid item xs={12} md>
 							<Autocomplete
+								noOptionsText="Sin resultados"
 								size="small"
 								options={[...new Set(data.map(item => item.distribution))]}
 								value={selectedCountry}
@@ -205,20 +209,26 @@ const PhitosanitaryParams = ({ data }) => {
 
 						{/* Filtro por Hospedante */}
 						<Grid item xs={12} md={6}>
-							<TextField
-								label="Buscar por Hospedante"
-								variant="outlined"
+							<Autocomplete
+								noOptionsText="Sin resultados"
 								size="small"
-								value={selectedCountry}
-								onChange={(e) => setSelectedCountry(e.target.value)}
-								fullWidth
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<GrassTwoToneIcon />
-										</InputAdornment>
-									),
-								}}
+								options={[...new Set(data.map(item => item.hosts))]}
+								value={selectedHospedant}
+								onChange={(_, newValue) => setSelectedHospedant(newValue)}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Buscar por Hospedante"
+										InputProps={{
+											...params.InputProps,
+											startAdornment: (
+												<InputAdornment position="start">
+													<GrassTwoToneIcon />
+												</InputAdornment>
+											)
+										}}
+									/>
+								)}
 								style={{ marginRight: '5px', width: '300px' }}
 							/>
 						</Grid>
