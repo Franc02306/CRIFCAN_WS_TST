@@ -15,16 +15,14 @@ const PhitosanitaryNewsApp = () => {
 
 	const fetchPhytosanitaryData = async () => {
 		setIsLoading(true)
+
 		try {
-			console.log('Iniciando carga de datos fitosanitarios...')
 			const response = await listData()
-			console.log('Datos recibidos de la API:', response.data)
+
 			setPhitsanitarySpecies(response.data)
 		} catch (err) {
-			console.error('Error al obtener datos:', err)
 			setError('Error al cargar datos fitosanitarios. Por favor intente nuevamente más tarde.')
 		} finally {
-			console.log('Finalizado el proceso de carga')
 			setIsLoading(false)
 		}
 	}
