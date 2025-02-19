@@ -61,12 +61,16 @@ const PhitosanitaryParams = ({ data }) => {
 		const filtered = data.filter(item => {
 			const matchesPlague = !selectedPlague ||
 				item.scientific_name?.toLowerCase().includes(selectedPlague.toLowerCase())
+				
 			const matchesCountry = !selectedCountry ||
 				item.distribution?.toLowerCase().includes(selectedCountry.toLowerCase())
+
 			const matchesHospedant = !selectedHospedant ||
 				item.hosts?.toLowerCase().includes(selectedHospedant.toLowerCase())
+
 			return matchesPlague && matchesCountry && matchesHospedant
 		})
+
 		setFilteredData(filtered)
 	}
 
