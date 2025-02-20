@@ -194,7 +194,7 @@ const UserList = ({ users, onUserAdded, getListUsers, statusFilter }) => {
 
   useEffect(() => {
     setPage(0);
-  }, [emailFilter, roleFilter]);  
+  }, [emailFilter, roleFilter]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 3 }}>
@@ -397,6 +397,7 @@ const UserList = ({ users, onUserAdded, getListUsers, statusFilter }) => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage='Usuarios por página'
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
         />
       </Box>
 

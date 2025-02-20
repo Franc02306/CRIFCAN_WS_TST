@@ -522,6 +522,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelRowsPerPage='Sitios por página'
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
           />
         </Box>
 

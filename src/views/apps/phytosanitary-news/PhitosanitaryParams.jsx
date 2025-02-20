@@ -47,6 +47,8 @@ import SearchIcon from '@mui/icons-material/Search';
 const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
 
+	const [page, setPage] = useState(0)
+	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [selectedPlague, setSelectedPlague] = useState(null)
 	const [selectedCountry, setSelectedCountry] = useState(null)
 	const [selectedHospedant, setSelectedHospedant] = useState(null)
@@ -61,7 +63,7 @@ const PhitosanitaryParams = ({ data }) => {
 		const filtered = data.filter(item => {
 			const matchesPlague = !selectedPlague ||
 				item.scientific_name?.toLowerCase().includes(selectedPlague.toLowerCase())
-				
+
 			const matchesCountry = !selectedCountry ||
 				item.distribution?.toLowerCase().includes(selectedCountry.toLowerCase())
 
@@ -72,7 +74,17 @@ const PhitosanitaryParams = ({ data }) => {
 		})
 
 		setFilteredData(filtered)
+		setPage(0)
 	}
+
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (event) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
+	};
 
 	const handleSaveSearch = () => {
 		if (!selectedPlague && !selectedCountry && !selectedHospedant) return
@@ -355,39 +367,41 @@ const PhitosanitaryParams = ({ data }) => {
 
 							<TableBody>
 								{filteredData && filteredData.length > 0 ? (
-									filteredData.map((row, index) => (
-										<TableRow key={index}>
-											<TableCell align='center'>{row.scientific_name}</TableCell>
-											<TableCell align='center'>{row.common_names}</TableCell>
-											<TableCell align='center'>{row.synonyms}</TableCell>
-											<TableCell align='center'>{row.invasiveness_description}</TableCell>
-											<TableCell align='center'>{row.distribution}</TableCell>
-											<TableCell align='center'>
-												{row.impact && Object.entries(row.impact).map(([key, value]) => (
-													<div key={key}>{`${key}: ${value}`}</div>
-												))}
-											</TableCell>
-											<TableCell align='center'>{row.habitat}</TableCell>
-											<TableCell align='center'>{row.life_cycle}</TableCell>
-											<TableCell align='center'>{row.reproduction}</TableCell>
-											<TableCell align='center'>{row.hosts}</TableCell>
-											<TableCell align='center'>{row.symptoms}</TableCell>
-											<TableCell align='center'>{row.affected_organs}</TableCell>
-											<TableCell align='center'>{row.environmental_conditions}</TableCell>
-											<TableCell align='center'>
-												{row.prevention_control && Object.entries(row.prevention_control).map(([key, value]) => (
-													<div key={key}>{`${key}: ${value}`}</div>
-												))}
-											</TableCell>
-											<TableCell align='center'>{row.uses}</TableCell>
-											<TableCell align='center'>
-												<a href={row.source_url} target="_blank" rel="noreferrer">
-													Enlace
-												</a>
-											</TableCell>
-											<TableCell align='center'>{row.scraper_source}</TableCell>
-										</TableRow>
-									))
+									filteredData
+										.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+										.map((row, index) => (
+											<TableRow key={index}>
+												<TableCell align='center'>{row.scientific_name}</TableCell>
+												<TableCell align='center'>{row.common_names}</TableCell>
+												<TableCell align='center'>{row.synonyms}</TableCell>
+												<TableCell align='center'>{row.invasiveness_description}</TableCell>
+												<TableCell align='center'>{row.distribution}</TableCell>
+												<TableCell align='center'>
+													{row.impact && Object.entries(row.impact).map(([key, value]) => (
+														<div key={key}>{`${key}: ${value}`}</div>
+													))}
+												</TableCell>
+												<TableCell align='center'>{row.habitat}</TableCell>
+												<TableCell align='center'>{row.life_cycle}</TableCell>
+												<TableCell align='center'>{row.reproduction}</TableCell>
+												<TableCell align='center'>{row.hosts}</TableCell>
+												<TableCell align='center'>{row.symptoms}</TableCell>
+												<TableCell align='center'>{row.affected_organs}</TableCell>
+												<TableCell align='center'>{row.environmental_conditions}</TableCell>
+												<TableCell align='center'>
+													{row.prevention_control && Object.entries(row.prevention_control).map(([key, value]) => (
+														<div key={key}>{`${key}: ${value}`}</div>
+													))}
+												</TableCell>
+												<TableCell align='center'>{row.uses}</TableCell>
+												<TableCell align='center'>
+													<a href={row.source_url} target="_blank" rel="noreferrer">
+														Enlace
+													</a>
+												</TableCell>
+												<TableCell align='center'>{row.scraper_source}</TableCell>
+											</TableRow>
+										))
 								) : (
 									<TableRow>
 										<TableCell colSpan={17} align="center">
@@ -400,6 +414,21 @@ const PhitosanitaryParams = ({ data }) => {
 							</TableBody>
 						</Table>
 					</TableContainer>
+				</Box>
+
+				{/* Paginación */}
+				<Box sx={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: 2 }}>
+					<TablePagination
+						rowsPerPageOptions={[5, 10, 25]}
+						component='div'
+						count={filteredData.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onPageChange={handleChangePage}
+						onRowsPerPageChange={handleChangeRowsPerPage}
+						labelRowsPerPage='Registros por página'
+						labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+					/>
 				</Box>
 			</Paper>
 		</>
