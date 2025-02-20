@@ -242,6 +242,39 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
     }))
   }
 
+  const confirmToggleNotification = (siteId) => {
+    const isActive = notifications[siteId];
+
+    Swal.fire({
+      title: isActive ? "¿Desactivar Notificaciones?" : "¿Activar Notificaciones?",
+      text: isActive
+        ? "Si desactivas las notificaciones, dejarás de recibir alertas sobre esta fuente."
+        : "Si activas las notificaciones, recibirás alertas cuando haya novedades en esta fuente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: isActive ? "Sí, desactivar" : "Sí, activar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: confirmButtonColor,
+      cancelButtonColor: cancelButtonColor,
+      background: backgroundColor,
+      color: titleColor, // Texto en el modal adaptado al modo oscuro o claro
+    }).then((result) => {
+      if (result.isConfirmed) {
+        toggleNotification(siteId);
+        Swal.fire({
+          title: isActive ? "Notificaciones Desactivadas" : "Notificaciones Activadas",
+          text: isActive
+            ? "Ya no recibirás alertas de esta fuente."
+            : "Se activaron las notificaciones para esta fuente.",
+          icon: "success",
+          confirmButtonColor: confirmButtonColor,
+          background: backgroundColor,
+          color: titleColor, // También aplicamos el color al mensaje de éxito
+        });
+      }
+    });
+  };
+
   return (
     <>
       <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 3 }}>
@@ -463,7 +496,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title={notifications[site.id] ? "Desactivar Notificaciones" : "Activar Notificaciones"}>
-                                <IconButton color={notifications[site.id] ? "warning" : "default"} onClick={() => toggleNotification(site.id)}>
+                                <IconButton color={notifications[site.id] ? "warning" : "default"} onClick={() => confirmToggleNotification(site.id)}>
                                   {notifications[site.id] ? <NotificationsActiveIcon /> : <NotificationsOffIcon />}
                                 </IconButton>
                               </Tooltip>
