@@ -23,6 +23,10 @@ export const addUrl = (body) => {
   return API.post('/api/v1/urls/', body)
 };
 
+export const notificationsUrl = (body) => {
+  return API.post('/api/notifications/toggle/', body)
+}
+
 
 // SERVICIO PUT
 export const updateUrl = (id, body) => {
