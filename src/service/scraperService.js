@@ -13,6 +13,13 @@ export const getUrlByParams = (url) => {
   });
 };
 
+export const getReportUrl = (idUrl) => {
+  return API.get(`/api/v1/report-comparison/`, {
+    params: {
+      idUrl: idUrl
+    }
+  })
+}
 
 // SERVICIO POST
 export const scrapUrl = (body) => {

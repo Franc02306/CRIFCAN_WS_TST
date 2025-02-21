@@ -41,15 +41,12 @@ import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
 import DescriptionIcon from '@mui/icons-material/Description'
 
-import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-
 // IMPORTACIÓN VENTANA MODAL
 import ParamsModal from '../modal/ParamsModal'
 import ViewUrlModal from '../modal/ViewUrlModal'
 
 // IMPORTACIÓN DE SERVICIOS
-import { scrapUrl, updateUrl } from '../../../../service/scraperService'
+import { scrapUrl, updateUrl, getReportUrl } from '../../../../service/scraperService'
 
 // OPCIONES DE FRECUENCIA DE SCPAPEO
 const frequencyOptions = [
@@ -470,37 +467,21 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                           </Box>
                         ) : (
                           <>
-                            <Box
-                              sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(2, 1fr)", // 2 columnas
-                                gridTemplateRows: "repeat(2, 1fr)", // 2 filas
-                                gap: "8px", // Espacio entre íconos
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Tooltip title="Editar">
-                                <IconButton color="info" onClick={() => handleOpenModal(site)}>
-                                  <EditIcon />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Scrapear">
-                                <IconButton color="success" onClick={() => handleScrapSite(site)}>
-                                  <UpdateIcon />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Registro de Actividad">
-                                <IconButton>
-                                  <DescriptionIcon />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title={notifications[site.id] ? "Desactivar Notificaciones" : "Activar Notificaciones"}>
-                                <IconButton color={notifications[site.id] ? "warning" : "default"} onClick={() => confirmToggleNotification(site.id)}>
-                                  {notifications[site.id] ? <NotificationsActiveIcon /> : <NotificationsOffIcon />}
-                                </IconButton>
-                              </Tooltip>
-                            </Box>
+                            <Tooltip title="Editar">
+                              <IconButton color="info" onClick={() => handleOpenModal(site)}>
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Scrapear">
+                              <IconButton color="success" onClick={() => handleScrapSite(site)}>
+                                <UpdateIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Registro de Actividad">
+                              <IconButton>
+                                <DescriptionIcon />
+                              </IconButton>
+                            </Tooltip>
                           </>
                         )}
                       </TableCell>
