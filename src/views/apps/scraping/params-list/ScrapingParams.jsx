@@ -49,7 +49,7 @@ import ParamsModal from '../modal/ParamsModal'
 import ViewUrlModal from '../modal/ViewUrlModal'
 
 // IMPORTACIÓN DE SERVICIOS
-import { scrapUrl, updateUrl } from '../../../../service/scraperService'
+import { scrapUrl, updateUrl, notificationsUrl } from '../../../../service/scraperService'
 
 // OPCIONES DE FRECUENCIA DE SCPAPEO
 const frequencyOptions = [
@@ -391,6 +391,9 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                     Última Fecha de Scrapeo
                   </TableCell>
                   <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+                    Estado y Detalle
+                  </TableCell>
+                  <TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
                     Acciones
                   </TableCell>
                 </TableRow>
@@ -399,7 +402,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
               <TableBody>
                 {sortedWebSites.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} align="center">
+                    <TableCell colSpan={7} align="center">
                       <Typography variant="body1" color="secondary">
                         No se encontraron registros de fuentes web.
                       </Typography>
@@ -462,6 +465,23 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                           ? new Date(site.fecha_scraper).toLocaleDateString()
                           : "No scrapeado hasta la fecha"}
                       </TableCell>
+                      <TableCell align="center">
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                            color:
+                              site.estado_scrapeo === "pendiente"
+                                ? "#d4a017" // Color mostaza
+                                : site.estado_scrapeo === "exitoso"
+                                  ? "green" // Color verde
+                                  : "red", // Color rojo para fallido
+                          }}
+                        >
+                          {site.estado_scrapeo.charAt(0).toUpperCase() + site.estado_scrapeo.slice(1)}
+                        </span>
+                        {site.error_scrapeo && ` | ${site.error_scrapeo}`}
+                      </TableCell>
+
                       <TableCell align="center">
                         {loadingSite === site.id ? (
                           <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
