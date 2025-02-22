@@ -70,7 +70,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   const [loadingSite, setLoadingSite] = useState(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
-  const [notifications, setNotifications] = useState({})
 
   const theme = useTheme()
 
@@ -219,58 +218,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   }
 
   const handleCloseSnackbar = () => setSnackbarOpen(false)
-
-  useEffect(() => {
-    if (webSites) {
-      const initialNotifications = {};
-
-      webSites.forEach(site => {
-        initialNotifications[site.id] = false;
-      });
-
-      setNotifications(initialNotifications)
-    }
-  }, [webSites])
-
-  const toggleNotification = (siteId) => {
-    setNotifications(prev => ({
-      ...prev,
-      [siteId]: !prev[siteId]
-    }))
-  }
-
-  const confirmToggleNotification = (siteId) => {
-    const isActive = notifications[siteId];
-
-    Swal.fire({
-      title: isActive ? "¿Desactivar Notificaciones?" : "¿Activar Notificaciones?",
-      text: isActive
-        ? "Si desactivas las notificaciones, dejarás de recibir alertas sobre esta fuente."
-        : "Si activas las notificaciones, recibirás alertas cuando haya novedades en esta fuente.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: isActive ? "Sí, desactivar" : "Sí, activar",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: confirmButtonColor,
-      cancelButtonColor: cancelButtonColor,
-      background: backgroundColor,
-      color: titleColor, // Texto en el modal adaptado al modo oscuro o claro
-    }).then((result) => {
-      if (result.isConfirmed) {
-        toggleNotification(siteId);
-        Swal.fire({
-          title: isActive ? "Notificaciones Desactivadas" : "Notificaciones Activadas",
-          text: isActive
-            ? "Ya no recibirás alertas de esta fuente."
-            : "Se activaron las notificaciones para esta fuente.",
-          icon: "success",
-          confirmButtonColor: confirmButtonColor,
-          background: backgroundColor,
-          color: titleColor, // También aplicamos el color al mensaje de éxito
-        });
-      }
-    });
-  };
 
   return (
     <>
