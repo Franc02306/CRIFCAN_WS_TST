@@ -194,6 +194,12 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
     if (result.isConfirmed) {
       try {
+        const updatedSites = webSites.map((s) =>
+          s.id === site.id ? { ...s, estado_scrapeo: "en_progreso" } : s
+        );
+
+        fetchWebSites(updatedSites);
+
         await scrapUrl({ url: site.url, tipo: site.type_file })
 
         await Swal.fire({
@@ -203,8 +209,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
           confirmButtonColor: confirmButtonColor,
           background: backgroundColor,
         });
-
-        fetchWebSites() // Actualización en tiempo real
 
       } catch (error) {
         console.error('Error interno al scrapear: ', error);
