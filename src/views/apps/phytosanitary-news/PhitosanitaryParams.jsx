@@ -136,7 +136,7 @@ const PhitosanitaryParams = ({ data }) => {
 			try {
 				const response = await createSubscription(subscriptionData);
 
-				if (response && response.success) {
+				if (response) {
 					Swal.fire({
 						html: `
                         <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
