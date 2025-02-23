@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { Alert, IconButton, InputAdornment, List, ListItem, ListItemText, Snackbar, Typography } from '@mui/material'
+import { CircularProgress, Alert, IconButton, InputAdornment, List, ListItem, ListItemText, Snackbar, Typography } from '@mui/material'
 
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
@@ -72,7 +72,7 @@ const ReportUrlModal = ({ reportId, open, onClose }) => {
 
 				<DialogTitle sx={{ fontSize: '23px' }}>Reporte de URL</DialogTitle>
 
-				<DialogContent dividers>
+				<DialogContent dividers sx={{ maxHeight: '50vh', overflowY: 'auto' }}>
 					<Box
 						component={Grid}
 						container
@@ -85,7 +85,7 @@ const ReportUrlModal = ({ reportId, open, onClose }) => {
 						}}
 					>
 						{loading ? (
-							<Typography>Cargando...</Typography>
+							<CircularProgress size={50} />
 						) : error ? (
 							<Typography color="error">{error}</Typography>
 						) : (
@@ -93,16 +93,20 @@ const ReportUrlModal = ({ reportId, open, onClose }) => {
 								<Typography variant="body1" gutterBottom>
 									{reportData?.message}
 								</Typography>
+
 								<Typography variant="body2">
 									URLs agregadas: {reportData?.info_agregada?.length || 0}
 								</Typography>
-								<List>
-									{reportData?.info_agregada?.map((url, index) => (
-										<ListItem key={index}>
-											<ListItemText primary={url} />
-										</ListItem>
-									))}
-								</List>
+
+								{reportData?.info_agregada?.length > 0 && (
+									<List sx={{ width: '100%', maxHeight: '35vh', overflowY: 'auto' }}>
+										{reportData.info_agregada.map((url, index) => (
+											<ListItem key={index}>
+												<ListItemText primary={url} />
+											</ListItem>
+										))}
+									</List>
+								)}
 							</>
 						)}
 					</Box>
