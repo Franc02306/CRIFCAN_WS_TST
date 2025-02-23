@@ -44,9 +44,10 @@ import DescriptionIcon from '@mui/icons-material/Description'
 // IMPORTACIÓN VENTANA MODAL
 import ParamsModal from '../modal/ParamsModal'
 import ViewUrlModal from '../modal/ViewUrlModal'
+import ReportUrlModal from '../modal/ReportUrlModal'
 
 // IMPORTACIÓN DE SERVICIOS
-import { scrapUrl, updateUrl, getReportUrl } from '../../../../service/scraperService'
+import { scrapUrl, updateUrl } from '../../../../service/scraperService'
 
 // OPCIONES DE FRECUENCIA DE SCPAPEO
 const frequencyOptions = [
@@ -66,8 +67,9 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   const [modalMode, setModalMode] = useState('create')
   const [isUrlModalOpen, setIsUrlModalOpen] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState('')
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [selectedReportId, setSelectedReportId] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [loadingSite, setLoadingSite] = useState(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
 
@@ -121,20 +123,30 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
     setIsModalOpen(true)
   }
 
-  const handleOpenUrlModal = url => {
-    setSelectedUrl(url)
-    setIsUrlModalOpen(true)
-  }
-
   const handleCloseModal = () => {
     setSelectedWeb(null)
     setIsModalOpen(false)
     setModalMode('create')
   }
 
+  const handleOpenUrlModal = url => {
+    setSelectedUrl(url)
+    setIsUrlModalOpen(true)
+  }
+
   const handleCloseUrlModal = () => {
     setSelectedUrl('')
     setIsUrlModalOpen(false)
+  }
+
+  const handleOpenReportModal = reportId => {
+    setSelectedReportId(reportId)
+    setIsReportModalOpen(true)
+  }
+
+  const handleCloseReportModal = () => {
+    setSelectedReportId(null)
+    setIsReportModalOpen(false)
   }
 
   const handleFrequencyChange = async (event, site) => {
@@ -182,10 +194,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
     if (result.isConfirmed) {
       try {
-        setLoadingSite(site.id)
         await scrapUrl({ url: site.url, tipo: site.type_file })
-
-        setLoadingSite(null);
 
         await Swal.fire({
           html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Datos scrapeados correctamente</span>`,
@@ -198,22 +207,16 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
         fetchWebSites() // Actualización en tiempo real
 
       } catch (error) {
-        console.error('Error interno al scrapear')
-
-        setLoadingSite(null);
+        console.error('Error interno al scrapear: ', error);
 
         await Swal.fire({
           html: `<span style="font-family: Arial, sans-serif; font-size: 26px; color: ${titleColor};">Error Interno</span>`,
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: cancelButtonColor,
-          background: backgroundColor,
+          background: backgroundColor
         });
-      } finally {
-        setLoadingSite(null)
       }
-    } else {
-      setLoadingSite(null)
     }
   }
 
@@ -415,42 +418,37 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                             fontWeight: "bold",
                             color:
                               site.estado_scrapeo === "pendiente"
-                                ? "#d4a017" // Color mostaza
-                                : site.estado_scrapeo === "exitoso"
-                                  ? "green" // Color verde
-                                  : "red", // Color rojo para fallido
+                                ? "#d4a017"
+                                : site.estado_scrapeo === "en_progreso"
+                                  ? "#007bff"
+                                  : site.estado_scrapeo === "exitoso"
+                                    ? "green"
+                                    : "red",
                           }}
                         >
                           {site.estado_scrapeo.charAt(0).toUpperCase() + site.estado_scrapeo.slice(1)}
                         </span>
-                        {site.error_scrapeo && ` | ${site.error_scrapeo}`}
+                        <span>
+                          {site.error_scrapeo ? ` | ${site.error_scrapeo}` : " | Sin estado de scrapeo actual"}
+                        </span>
                       </TableCell>
 
                       <TableCell align="center">
-                        {loadingSite === site.id ? (
-                          <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
-                            <Typography variant="body2">Scrapeando...</Typography> {/* Texto "Scrapeando..." */}
-                            <CircularProgress size={20} /> {/* Spinner */}
-                          </Box>
-                        ) : (
-                          <>
-                            <Tooltip title="Editar">
-                              <IconButton color="info" onClick={() => handleOpenModal(site)}>
-                                <EditIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Scrapear">
-                              <IconButton color="success" onClick={() => handleScrapSite(site)}>
-                                <UpdateIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Registro de Actividad">
-                              <IconButton>
-                                <DescriptionIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </>
-                        )}
+                        <Tooltip title="Editar">
+                          <IconButton color="info" onClick={() => handleOpenModal(site)}>
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Scrapear">
+                          <IconButton color="success" onClick={() => handleScrapSite(site)}>
+                            <UpdateIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Registro de Actividad">
+                          <IconButton color='secondary' onClick={() => handleOpenReportModal(site.id)}>
+                            <DescriptionIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))
@@ -474,6 +472,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
           />
         </Box>
 
+        {/* MODALS */}
         <ParamsModal
           open={isModalOpen}
           setIsModalOpen={setIsModalOpen}
@@ -482,7 +481,8 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
           mode={modalMode}
           fetchWebSites={fetchWebSites}
         />
-        <ViewUrlModal url={selectedUrl} open={isUrlModalOpen} onClose={handleCloseUrlModal} />
+        <ViewUrlModal open={isUrlModalOpen} url={selectedUrl} onClose={handleCloseUrlModal} />
+        <ReportUrlModal open={isReportModalOpen} onClose={handleCloseReportModal} reportId={selectedReportId} />
       </Paper>
 
       <Snackbar

@@ -14,11 +14,8 @@ export const getUrlByParams = (url) => {
 };
 
 export const getReportUrl = (idUrl) => {
-  return API.get(`/api/v1/report-comparison/`, {
-    params: {
-      idUrl: idUrl
-    }
-  })
+  return API.get(`/api/v1/report-comparison/${idUrl}`,
+  )
 }
 
 // SERVICIO POST
