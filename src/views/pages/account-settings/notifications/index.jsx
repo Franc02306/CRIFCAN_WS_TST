@@ -13,6 +13,8 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
+import Swal from 'sweetalert2'
+import { useTheme } from '@emotion/react'
 
 import Link from '@components/Link'
 import Form from '@components/Form'
@@ -20,24 +22,86 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import tableStyles from '@core/styles/table.module.css'
 
+
 // IMPORTACION DE SERVICIOS
 import { listSubscription, deleteSubscription } from '../../../../service/phitsanitaryService'
 
 const Notifications = () => {
+  const theme = useTheme();
   const [savedSearches, setSavedSearches] = useState([])
 
-  useEffect(() => {
-    const storedSearches = JSON.parse(localStorage.getItem("savedSearches")) || []
+  const fetchSearches = async () => {
+    try {
+      const response = await listSubscription()
 
-    setSavedSearches(storedSearches)
+      if (response && response.data) {
+        setSavedSearches(response.data)
+      } else {
+        setSavedSearches([])
+      }
+    } catch (error) {
+      console.error("Error al obtener las busquedas: ", error)
+      setSavedSearches([])
+    }
+  }
+
+  useEffect(() => {
+    fetchSearches()
   }, [])
 
-  const handleDelete = (id) => {
-    const updatedSearches = savedSearches.filter((search) => search.id !== id)
+  const handleDelete = async (id) => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000';
+    const backgroundColor = theme.palette.background.paper;
+    const confirmButtonColor = theme.palette.primary.main;
+    const cancelButtonColor = theme.palette.error.main;
 
-    setSavedSearches(updatedSearches)
-    localStorage.setItem("savedSearches", JSON.stringify(updatedSearches))
-  }
+    const confirmDelete = await Swal.fire({
+      html: `
+            <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                ¿Estás seguro de eliminar esta búsqueda?
+            </span>
+        `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: confirmButtonColor,
+      cancelButtonColor: cancelButtonColor,
+      background: backgroundColor
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        await deleteSubscription(id);
+        setSavedSearches((prevSearches) => prevSearches.filter((search) => search.id !== id));
+
+        Swal.fire({
+          html: `
+                <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                    Búsqueda eliminada con éxito
+                </span>
+                `,
+          icon: "success",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: confirmButtonColor,
+          background: backgroundColor
+        });
+      } catch (error) {
+        console.error("Error al borrar la búsqueda: ", error);
+        Swal.fire({
+          html: `
+                <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                    Error al eliminar
+                </span>
+                `,
+          icon: "error",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: confirmButtonColor,
+          background: backgroundColor
+        });
+      }
+    }
+  };
 
   return (
     <Card>
@@ -58,16 +122,16 @@ const Notifications = () => {
           </thead>
           <tbody className='border-be'>
             {savedSearches.length > 0 ? (
-              savedSearches.map((search, index) => (
+              savedSearches.map((search) => (
                 <tr key={search.id}>
                   <td>
-                    <Typography color='text.primary'>{search.name}</Typography>
+                    <Typography color='text.primary'>{search.name_subscription}</Typography>
                   </td>
                   <td>
-                    <Typography color='text.primary'>{search.plague}</Typography>
+                    <Typography color='text.primary'>{search.scientific_name}</Typography>
                   </td>
                   <td>
-                    <Typography color='text.primary'>{search.country}</Typography>
+                    <Typography color='text.primary'>{search.distribution}</Typography>
                   </td>
                   <td>
                     <Typography color='text.primary'>{search.hosts}</Typography>
@@ -83,7 +147,7 @@ const Notifications = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={4} style={{ textAlign: 'center', padding: '10px' }}>
+                <td colSpan={5} style={{ textAlign: 'center', padding: '10px' }}>
                   <Typography variant='body1' color='text.secondary'>
                     No hay búsquedas guardadas.
                   </Typography>

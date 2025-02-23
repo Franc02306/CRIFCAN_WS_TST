@@ -18,5 +18,5 @@ export const createSubscription = (body) => {
 
 // SERVICIO DELETE
 export const deleteSubscription = (idSubscription) => {
-    return API.delete(`/api/v1/subscription/${idSubscription}`)
+    return API.delete(`/api/v1/subscription/${idSubscription}/`)
 }
