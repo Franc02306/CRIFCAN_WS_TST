@@ -39,6 +39,3 @@ export const notificationsUrl = (body) => {
 export const updateUrl = (id, body) => {
   return API.put(`/api/v1/urls/${id}/`, body)
 };
-
-
-// http://127.0.0.1:8000/api/v1/scrape-url/

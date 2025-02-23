@@ -45,7 +45,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import SearchIcon from '@mui/icons-material/Search';
 
 // IMPORTACIÓN DE SERVICIOS
-import { listSubscription } from '../../../service/phitsanitaryService'
+import { createSubscription } from '../../../service/phitsanitaryService'
 
 const PhitosanitaryParams = ({ data }) => {
 	const theme = useTheme();
@@ -56,7 +56,6 @@ const PhitosanitaryParams = ({ data }) => {
 	const [selectedCountry, setSelectedCountry] = useState(null)
 	const [selectedHospedant, setSelectedHospedant] = useState(null)
 	const [filteredData, setFilteredData] = useState(data || [])
-	const [savedSearches, setSavedSearches] = useState([])
 
 	useEffect(() => {
 		setFilteredData(data)
@@ -89,24 +88,22 @@ const PhitosanitaryParams = ({ data }) => {
 		setPage(0);
 	};
 
-	const handleSaveSearch = () => {
-		if (!selectedPlague && !selectedCountry && !selectedHospedant) return
+	const handleSaveSearch = async () => {
+		const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000';
+		const backgroundColor = theme.palette.background.paper;
+		const confirmButtonColor = theme.palette.primary.main;
+		const cancelButtonColor = theme.palette.error.main;
 
-		const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
-		const backgroundColor = theme.palette.background.paper
-		const confirmButtonColor = theme.palette.primary.main
-		const cancelButtonColor = theme.palette.error.main
-
-		Swal.fire({
+		const { value: searchName } = await Swal.fire({
 			html: `
-					<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
-							¿Guardar esta búsqueda?
-					</span>
-					<br>
-					<span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
-							Podrás consultarla más tarde en la sección de 'Ajustes'.
-					</span>
-			`,
+            <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                ¿Guardar esta búsqueda?
+            </span>
+            <br>
+            <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+                Podrás consultarla más tarde en la sección de 'Ajustes'.
+            </span>
+        `,
 			input: "text",
 			inputPlaceholder: "Ingrese un nombre para la búsqueda",
 			icon: "question",
@@ -120,44 +117,64 @@ const PhitosanitaryParams = ({ data }) => {
 				style: `color: ${titleColor}; font-size: 16px; font-family: Arial, sans-serif;`
 			},
 			preConfirm: (inputValue) => {
-				return inputValue ? inputValue : "Búsqueda sin nombre";
+				if (!inputValue.trim()) {
+					Swal.showValidationMessage("El nombre de la búsqueda es obligatorio.");
+				}
+
+				return inputValue.trim();
 			}
-		}).then((result) => {
-			if (result.isConfirmed) {
-				const newSearch = {
-					id: Date.now(),
-					name: result.value, // Se almacena el nombre ingresado por el usuario
-					plague: selectedPlague || "Guardado sin Nombre Científico",
-					country: selectedCountry || "Guardado sin Distribución",
-					hosts: selectedHospedant || "Guardado sin Hospedante"
-				};
+		});
 
-				setSavedSearches(prevSearches => {
-					const updatedSearches = [...prevSearches, newSearch];
+		if (searchName) {
+			const subscriptionData = {
+				scientific_name: selectedPlague || "",
+				distribution: selectedCountry ? [selectedCountry] : [],
+				hosts: selectedHospedant ? [selectedHospedant] : [],
+				name_subscription: searchName
+			};
 
-					localStorage.setItem("savedSearches", JSON.stringify(updatedSearches)); // Guardar en localStorage
+			try {
+				const response = await createSubscription(subscriptionData);
 
-					return updatedSearches;
-				});
-
+				if (response && response.success) {
+					Swal.fire({
+						html: `
+                        <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
+                            Guardado con éxito
+                        </span>
+                        <br>
+                        <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
+                            Tu búsqueda ha sido guardada correctamente.
+                        </span>
+                    `,
+						icon: "success",
+						confirmButtonText: "Aceptar",
+						confirmButtonColor: confirmButtonColor,
+						background: backgroundColor
+					});
+				} else {
+					throw new Error("La búsqueda no pudo ser guardada.");
+				}
+			} catch (error) {
 				Swal.fire({
 					html: `
                     <span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">
-                        Guardado con éxito
+                        Error al guardar
                     </span>
                     <br>
                     <span style="display: block; margin-top: 15px; font-family: Arial, sans-serif; font-size: 16px; color: ${titleColor};">
-                        Tu búsqueda ha sido guardada correctamente.
+                        ${error.message || "Ocurrió un problema al guardar la búsqueda."}
                     </span>
                 `,
-					icon: "success",
+					icon: "error",
 					confirmButtonText: "Aceptar",
 					confirmButtonColor: confirmButtonColor,
 					background: backgroundColor
 				});
 			}
-		})
-	}
+		}
+	};
+
 
 	// Esta variable verifica si hay filtros rellenados para habilitar el botón
 	const isSaveDisabled = !selectedPlague && !selectedCountry && !selectedHospedant

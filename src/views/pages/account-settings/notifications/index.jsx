@@ -20,6 +20,9 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import tableStyles from '@core/styles/table.module.css'
 
+// IMPORTACION DE SERVICIOS
+import { listSubscription, deleteSubscription } from '../../../../service/phitsanitaryService'
+
 const Notifications = () => {
   const [savedSearches, setSavedSearches] = useState([])
 
@@ -82,7 +85,7 @@ const Notifications = () => {
               <tr>
                 <td colSpan={4} style={{ textAlign: 'center', padding: '10px' }}>
                   <Typography variant='body1' color='text.secondary'>
-                    No hayapi/swagger/ búsquedas guardadas.
+                    No hay búsquedas guardadas.
                   </Typography>
                 </td>
               </tr>
@@ -93,14 +96,6 @@ const Notifications = () => {
 
       <CardContent>
         <Grid container spacing={6}>
-          {/* <Grid item xs={12} className='flex gap-4 flex-wrap'>
-            <Button variant='contained' type='submit'>
-              Guardar Cambios
-            </Button>
-            <Button variant='outlined' color='error' type='reset'>
-              Descartar
-            </Button>
-          </Grid> */}
         </Grid>
       </CardContent>
     </Card>
