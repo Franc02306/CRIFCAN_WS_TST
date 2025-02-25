@@ -332,6 +332,9 @@ const PhitosanitaryParams = ({ data }) => {
 							<TableHead style={{ backgroundColor: theme.palette.primary.main }}>
 								<TableRow>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
+										Url Fuente
+									</TableCell>
+									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Nombre Científico
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
@@ -377,9 +380,6 @@ const PhitosanitaryParams = ({ data }) => {
 										Usos
 									</TableCell>
 									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
-										Url Fuente
-									</TableCell>
-									<TableCell align='center' sx={{ color: theme.palette.primary.contrastText }}>
 										Fuente Scraper
 									</TableCell>
 								</TableRow>
@@ -391,6 +391,12 @@ const PhitosanitaryParams = ({ data }) => {
 										.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 										.map((row, index) => (
 											<TableRow key={index}>
+												<TableCell align='center'>
+													<a href={row.source_url} target="_blank" rel="noreferrer"
+														style={{ fontWeight: 'bold', textDecoration: 'underline', color: 'blue' }}>
+														Enlace
+													</a>
+												</TableCell>
 												<TableCell align='center'>{row.scientific_name}</TableCell>
 												<TableCell align='center'>{row.common_names}</TableCell>
 												<TableCell align='center'>{row.synonyms}</TableCell>
@@ -414,12 +420,7 @@ const PhitosanitaryParams = ({ data }) => {
 													))}
 												</TableCell>
 												<TableCell align='center'>{row.uses}</TableCell>
-												<TableCell align='center'>
-													<a href={row.source_url} target="_blank" rel="noreferrer">
-														Enlace
-													</a>
-												</TableCell>
-												<TableCell align='center'>{row.scraper_source}</TableCell>
+												<TableCell align='center'>{row.sobrenombre}</TableCell>
 											</TableRow>
 										))
 								) : (
