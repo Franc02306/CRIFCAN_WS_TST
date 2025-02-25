@@ -29,7 +29,9 @@ import {
   Divider,
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
+  FormControl,
+  InputLabel
 } from '@mui/material'
 
 import Swal from 'sweetalert2'
@@ -72,6 +74,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [statusFilter, setStatusFilter] = useState('Todos');
 
   const theme = useTheme()
 
@@ -89,8 +92,13 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   }
 
   const filteredWebSites = useMemo(() => {
-    return (webSites || []).filter(site => site.sobrenombre?.toLowerCase().includes(searchTerm.toLowerCase()))
-  }, [webSites, searchTerm])
+    return (webSites || []).filter((site) => {
+      const matchesSearch = site.sobrenombre?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === "" || statusFilter === "Todos" || site.estado_scrapeo === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [webSites, searchTerm, statusFilter]);
 
   const sortedWebSites = useMemo(() => {
     return [...filteredWebSites].sort((a, b) => {
@@ -109,6 +117,11 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
     setSearchTerm(event.target.value)
     setPage(0)
   }
+
+  const handleStatusChange = (event) => {
+    setStatusFilter(event.target.value);
+    setPage(0);
+  };
 
   const handleChangePage = (event, newPage) => setPage(newPage)
 
@@ -251,11 +264,33 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
         </Box>
 
         <Box sx={{ padding: 5 }}>
-          <Grid container spacing={2} alignItems='center' sx={{ marginBottom: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 3
+            }}
+          >
             <Typography variant='h5' sx={{ fontWeight: 'bold', marginLeft: '12px', marginBottom: '10px' }}>
               Parámetros de Scrapeo
             </Typography>
-          </Grid>
+
+            <FormControl sx={{ minWidth: 230 }} size='small'>
+              <InputLabel>Filtrar por Estado</InputLabel>
+              <Select
+                value={statusFilter}
+                onChange={handleStatusChange}
+                label="Filtrar por Estado"
+              >
+                <MenuItem value="Todos">Todos</MenuItem>
+                <MenuItem value="pendiente">Pendiente</MenuItem>
+                <MenuItem value="en_progreso">En Progreso</MenuItem>
+                <MenuItem value="exitoso">Exitoso</MenuItem>
+                <MenuItem value="fallido">Fallido</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
           <TableContainer
             sx={{
