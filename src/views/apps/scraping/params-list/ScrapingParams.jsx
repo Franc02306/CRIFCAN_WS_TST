@@ -202,13 +202,19 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
         await scrapUrl({ url: site.url, tipo: site.type_file })
 
-        await Swal.fire({
-          html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Datos scrapeados correctamente</span>`,
-          icon: "success",
-          confirmButtonText: "Aceptar",
-          confirmButtonColor: confirmButtonColor,
-          background: backgroundColor,
-        });
+        const checkScrapeStatus = setInterval(async () => {
+          try {
+            const updatedData = await fetchWebSites(); // Llamada a la API
+            const updatedSite = updatedData.find((s) => s.id === site.id);
+
+            if (["exitoso", "fallido"].includes(updatedSite.estado_scrapeo)) {
+              clearInterval(checkScrapeStatus);
+              fetchWebSites(); // Refrescar la tabla
+            }
+          } catch (error) {
+            console.error("Error al verificar el estado del scrapeo:", error);
+          }
+        }, 5000);
 
       } catch (error) {
         console.error('Error interno al scrapear: ', error);
@@ -249,12 +255,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                 style={{ marginRight: '5px', width: '300px' }}
               />
             </Grid>
-
-            {/* <Grid item xs={12} md='auto'>
-            <Button variant='contained' color='primary' startIcon={<AddIcon />} onClick={() => handleOpenModal()}>
-              Agregar Fuente Web
-            </Button>
-          </Grid> */}
           </Grid>
         </Box>
 
@@ -430,7 +430,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                                     : "red",
                           }}
                         >
-                          {site.estado_scrapeo.charAt(0).toUpperCase() + site.estado_scrapeo.slice(1)}
+                          {site.estado_scrapeo.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                         </span>
                         <span>
                           {site.error_scrapeo ? ` | ${site.error_scrapeo}` : " | Sin estado de scrapeo actual"}
