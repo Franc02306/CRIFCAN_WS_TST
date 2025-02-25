@@ -78,6 +78,14 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
   const theme = useTheme()
 
+
+  const estadoColors = {
+    pendiente: theme.palette.mode === 'dark' ? '#ffcc66' : '#d4a017', // Color más claro en oscuro
+    en_progreso: theme.palette.mode === 'dark' ? '#66a3ff' : '#007bff', // Azul más claro
+    exitoso: theme.palette.mode === 'dark' ? '#99ff99' : 'green', // Verde más claro
+    fallido: theme.palette.mode === 'dark' ? '#ff6666' : 'red', // Rojo más claro
+  };
+
   // VARIABLES PARA EL TEMA SWAL
   const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
   const backgroundColor = theme.palette.background.paper
@@ -443,14 +451,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
                         <span
                           style={{
                             fontWeight: "bold",
-                            color:
-                              site.estado_scrapeo === "pendiente"
-                                ? "#d4a017"
-                                : site.estado_scrapeo === "en_progreso"
-                                  ? "#007bff"
-                                  : site.estado_scrapeo === "exitoso"
-                                    ? "green"
-                                    : "red",
+                            color: estadoColors[site.estado_scrapeo] || (theme.palette.mode === 'dark' ? '#ffffff' : '#000000'),
                           }}
                         >
                           {site.estado_scrapeo.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
