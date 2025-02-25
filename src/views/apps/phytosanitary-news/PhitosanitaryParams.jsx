@@ -392,8 +392,16 @@ const PhitosanitaryParams = ({ data }) => {
 										.map((row, index) => (
 											<TableRow key={index}>
 												<TableCell align='center'>
-													<a href={row.source_url} target="_blank" rel="noreferrer"
-														style={{ fontWeight: 'bold', textDecoration: 'underline', color: 'blue' }}>
+													<a
+														href={row.source_url}
+														target="_blank"
+														rel="noreferrer"
+														style={{
+															fontWeight: 'bold',
+															textDecoration: 'underline',
+															color: theme.palette.mode === 'dark' ? 'lightblue' : 'blue'
+														}}
+													>
 														Enlace
 													</a>
 												</TableCell>

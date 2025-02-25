@@ -202,19 +202,7 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
         await scrapUrl({ url: site.url, tipo: site.type_file })
 
-        const checkScrapeStatus = setInterval(async () => {
-          try {
-            const updatedData = await fetchWebSites(); // Llamada a la API
-            const updatedSite = updatedData.find((s) => s.id === site.id);
-
-            if (["exitoso", "fallido"].includes(updatedSite.estado_scrapeo)) {
-              clearInterval(checkScrapeStatus);
-              fetchWebSites(); // Refrescar la tabla
-            }
-          } catch (error) {
-            console.error("Error al verificar el estado del scrapeo:", error);
-          }
-        }, 5000);
+        fetchWebSites()
 
       } catch (error) {
         console.error('Error interno al scrapear: ', error);
