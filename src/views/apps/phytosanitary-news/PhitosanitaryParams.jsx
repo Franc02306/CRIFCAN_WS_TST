@@ -127,9 +127,9 @@ const PhitosanitaryParams = ({ data }) => {
 
 		if (searchName) {
 			const subscriptionData = {
-				scientific_name: selectedPlague || "",
-				distribution: selectedCountry || "",
-				hosts: selectedHospedant || "",
+				scientific_name: selectedPlague || "[]",
+				distribution: selectedCountry || "[]",
+				hosts: selectedHospedant || "[]",
 				name_subscription: searchName
 			};
 

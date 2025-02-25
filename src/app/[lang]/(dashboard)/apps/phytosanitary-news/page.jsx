@@ -19,7 +19,21 @@ const PhitosanitaryNewsApp = () => {
 		try {
 			const response = await listData()
 
-			setPhitsanitarySpecies(response.data)
+			const cleanedData = response.data.map(item => {
+				const cleanedItem = {};
+
+				Object.keys(item).forEach(key => {
+					if (typeof item[key] === "string") {
+						cleanedItem[key] = item[key].replace(/^\[\"?|\]\"?$/g, ""); // Elimina los corchetes
+					} else {
+						cleanedItem[key] = item[key]; // Mantiene otros tipos de datos sin cambios
+					}
+				});
+
+				return cleanedItem;
+			});
+
+			setPhitsanitarySpecies(cleanedData);
 		} catch (err) {
 			setError('Error al cargar datos fitosanitarios. Por favor intente nuevamente más tarde.')
 		} finally {
