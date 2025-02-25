@@ -24,9 +24,9 @@ const PhitosanitaryNewsApp = () => {
 
 				Object.keys(item).forEach(key => {
 					if (typeof item[key] === "string") {
-						cleanedItem[key] = item[key].replace(/^\[\"?|\]\"?$/g, ""); // Elimina los corchetes
+						cleanedItem[key] = item[key].replace(/^\[|\]$/g, ""); // 🔹 Elimina SOLO los corchetes
 					} else {
-						cleanedItem[key] = item[key]; // Mantiene otros tipos de datos sin cambios
+						cleanedItem[key] = item[key]; // 🔹 Mantiene otros tipos de datos sin cambios
 					}
 				});
 
