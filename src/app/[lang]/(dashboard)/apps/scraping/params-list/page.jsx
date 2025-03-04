@@ -16,10 +16,9 @@ const ParamsListApp = () => {
   const fetchWebSites = useCallback(async () => {
     try {
       setIsLoading(true)
-
       const response = await listUrls()
-
-      setWebSites(response.data)
+      
+      setWebSites(response.data) // Ahora `response.data` tiene **todos** los registros
     } catch (error) {
       console.error('Error al obtener los sitios de scraping: ', error)
       setError('Algo salió mal, intenta de nuevo más tarde')
