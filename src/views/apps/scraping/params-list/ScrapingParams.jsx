@@ -59,11 +59,14 @@ const frequencyOptions = [
   { id: 4, label: 'Semanal' }
 ]
 
-const ScrapingParams = ({ webSites, fetchWebSites }) => {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+const ScrapingParams = ({ webSites, fetchWebSites, currentPage, nextPage, prevPage, totalRecords }) => {
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('sobrenombre')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('Todos');
+
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
   const [selectedWeb, setSelectedWeb] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('create')
@@ -71,13 +74,10 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
   const [selectedUrl, setSelectedUrl] = useState('')
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [selectedReportId, setSelectedReportId] = useState(null)
-  const [searchTerm, setSearchTerm] = useState('')
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
-  const [statusFilter, setStatusFilter] = useState('Todos');
 
   const theme = useTheme()
-
 
   const estadoColors = {
     pendiente: theme.palette.mode === 'dark' ? '#ffcc66' : '#d4a017', // Color más claro en oscuro
@@ -97,6 +97,30 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
 
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
+  }
+
+  const handleSearchChange = event => {
+    setSearchTerm(event.target.value)
+
+    // setPage(0)
+  }
+
+  const handleStatusChange = (event) => {
+    setStatusFilter(event.target.value);
+
+    // setPage(0);
+  };
+
+  const handleNextPage = () => {
+    if (nextPage) {
+      fetchWebSites(currentPage + 1) // Llamar API con la siguiente página
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (prevPage) {
+      fetchWebSites(currentPage - 1) // Llamar API con la página anterior
+    }
   }
 
   const filteredWebSites = useMemo(() => {
@@ -120,16 +144,6 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
       return order === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA)
     })
   }, [filteredWebSites, order, orderBy])
-
-  const handleSearchChange = event => {
-    setSearchTerm(event.target.value)
-    setPage(0)
-  }
-
-  const handleStatusChange = (event) => {
-    setStatusFilter(event.target.value);
-    setPage(0);
-  };
 
   const handleChangePage = (event, newPage) => setPage(newPage)
 
@@ -486,18 +500,15 @@ const ScrapingParams = ({ webSites, fetchWebSites }) => {
           </TableContainer>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: 2 }}>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component='div'
-            count={sortedWebSites.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage='Sitios por página'
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-          />
+        {/* Controles de paginación */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
+          <Button variant="contained" onClick={handlePrevPage} disabled={!prevPage}>
+            Anterior
+          </Button>
+          <Typography>Página {currentPage}</Typography>
+          <Button variant="contained" onClick={handleNextPage} disabled={!nextPage}>
+            Siguiente
+          </Button>
         </Box>
 
         {/* MODALS */}

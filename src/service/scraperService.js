@@ -1,8 +1,8 @@
 import API from './axios.config'
 
 // SERVICIO GET
-export const listUrls = () => {
-  return API.get('/api/v1/urls/')
+export const listUrls = (page = 1) => {
+  return API.get(`/api/v1/urls/?page=${page}`)
 };
 
 export const getUrlByParams = (url) => {
