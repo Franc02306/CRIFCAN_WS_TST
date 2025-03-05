@@ -410,11 +410,7 @@ const PhitosanitaryParams = ({ data }) => {
 												<TableCell align='center'>{row.synonyms}</TableCell>
 												<TableCell align='center'>{row.invasiveness_description}</TableCell>
 												<TableCell align='center'>{row.distribution}</TableCell>
-												<TableCell align='center'>
-													{row.impact && Object.entries(row.impact).map(([key, value]) => (
-														<div key={key}>{`${key}: ${value}`}</div>
-													))}
-												</TableCell>
+												<TableCell align='center'>{row.impact}</TableCell>
 												<TableCell align='center'>{row.habitat}</TableCell>
 												<TableCell align='center'>{row.life_cycle}</TableCell>
 												<TableCell align='center'>{row.reproduction}</TableCell>
@@ -422,11 +418,7 @@ const PhitosanitaryParams = ({ data }) => {
 												<TableCell align='center'>{row.symptoms}</TableCell>
 												<TableCell align='center'>{row.affected_organs}</TableCell>
 												<TableCell align='center'>{row.environmental_conditions}</TableCell>
-												<TableCell align='center'>
-													{row.prevention_control && Object.entries(row.prevention_control).map(([key, value]) => (
-														<div key={key}>{`${key}: ${value}`}</div>
-													))}
-												</TableCell>
+												<TableCell align='center'>{row.prevention_control}</TableCell>
 												<TableCell align='center'>{row.uses}</TableCell>
 												<TableCell align='center'>{row.sobrenombre}</TableCell>
 											</TableRow>
