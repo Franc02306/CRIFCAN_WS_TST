@@ -120,8 +120,10 @@ const ParamsModal = ({ open, setIsModalOpen, onClose, web, mode, fetchWebSites }
     }
 
     const payload = {
-      ...formData
-    }
+      url: formData.url,
+      sobrenombre: formData.sobrenombre,
+      time_choices: formData.time_choices
+    };
 
     try {
       if (isEditMode) {
